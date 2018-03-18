@@ -10,29 +10,9 @@ export class Config {
   static debug:boolean = false;
   static pageSize:number = 10;
 
-  // static api:string = 'http://192.168.0.88/BSAppWeb/Api/';
-  // static imgUrl:string = 'http://192.168.0.88/BSAppWeb/';
-
-  // static api:string = 'http://192.168.0.110:8010/Api/';
-  // static imgUrl:string = 'http://192.168.0.110:8010/';
+  static api:string = 'http://127.0.0.1:5000/Api/';
+  static imgUrl:string = 'http://127.0.0.1:5000/';
   
-  // static api:string = 'http://103.242.169.150:8050/Api/';
-  // static imgUrl:string = 'http://103.242.169.150:8050/';
-  
-  // static api:string = 'http://103.242.169.150:7022/Api/';
-  // static imgUrl:string = 'http://103.242.169.150:7022/';
-  
-  /**
-   * 东航测试库
-   */
-  // static api:string = 'http://180.168.199.234:8066/Api/';
-  // static imgUrl:string = 'http://180.168.199.234:8066/';
-
-  /**
-   * 上海测试库
-   */
-  static api:string = 'http://103.242.169.150:8070/Api/';
-  static imgUrl:string = 'http://103.242.169.150:8070/';
   static _api:string = Config.api;
   static _imgUrl:string = Config.imgUrl;
 

@@ -1,6 +1,6 @@
 import { CommonService } from "../../../Service/Common.Service";
 import { ToPostService } from "../../../Service/ToPost.Service";
-import { NavController, ToastController, AlertController,IonicPage } from 'ionic-angular';
+import { NavController, ToastController, AlertController, IonicPage } from 'ionic-angular';
 import { Component, } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Config } from "../../../Classes/Config";
@@ -31,7 +31,7 @@ export class UserRegPage {
     type: '0',
     BIRTHDAY_TIME: '',
     BirthdayTimeChinese: ''
-    
+
   }
 
   constructor(private formBuilder: FormBuilder,
@@ -50,8 +50,8 @@ export class UserRegPage {
       birthday_place: [''],
     });
     this.validateMessages = {
-      'loginName': {'aliasName': '登录名'},
-      'code': {'aliasName': '短信验证码'},
+      'loginName': { 'aliasName': '登录名' },
+      'code': { 'aliasName': '短信验证码' },
       'userName': { 'aliasName': '姓名' },
       'pollCode': { 'aliasName': '推荐码' },
       'password': { 'aliasName': '密码' },
@@ -95,8 +95,9 @@ export class UserRegPage {
       }
     })
   }
+
   SubmitFather() {
-    var postBean:any = {
+    var postBean: any = {
       para: [{ K: "name", V: this.fatherName }]
     }
     this.toPostService.List("UserInfo/UserInfoSingleByName", postBean, (currMsg) => {
@@ -154,6 +155,7 @@ export class UserRegPage {
       }
     })
   }
+  
   submit() {
     if (this.userForm.invalid) {
       this.formErrors = this.commonService.FormValidMsg(this.userForm, this.validateMessages);

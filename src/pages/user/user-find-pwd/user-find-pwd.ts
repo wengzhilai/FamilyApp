@@ -78,7 +78,7 @@ export class UserFindPwdPage {
     this.sendCodeText="60秒";
     this.i=60;
     this.SetTimeValue();
-    this.toPostService.Post("Public/SendCode", {"para":[{"K":"phone",V: control.value}]}, (currMsg)=>{
+    this.toPostService.Post("Public/SendCode", {"Data":{"phoneNum": control.value}}, (currMsg)=>{
       if (currMsg.IsError) {
         this.commonService.hint(currMsg.Message)
       } else {
