@@ -65,14 +65,14 @@
       <ion-item-group>
         <ion-item>
           <ion-label>阴历</ion-label>
-          <ion-datetime [ngModelOptions]="{standalone: true}" style="margin:0px;padding:0px" displayFormat="YYYY年MMMDD日H时" min="1661"
+          <ion-datetime [ngModelOptions]="{standalone: true}" style="margin:0px;padding:0px" displayFormat="YYYY年MMM DD日H时" min="1661"
             [(ngModel)]="bean.BirthdayTimeChinese" (ionChange)="ChinaToPubic(bean.BirthdayTimeChinese,'BIRTHDAY_TIME')" cancelText='取消'
             doneText='完成'></ion-datetime>
         </ion-item>
       </ion-item-group>
       <ion-item>
         <ion-label>阳历</ion-label>
-        <ion-datetime [ngModelOptions]="{standalone: true}" style="margin:0px;padding:0px" displayFormat="YYYY年MMMDD日H时" min="1661"
+        <ion-datetime [ngModelOptions]="{standalone: true}" style="margin:0px;padding:0px" displayFormat="YYYY年MMM DD日H时" min="1661"
           [(ngModel)]="bean.BIRTHDAY_TIME" (ionChange)="PubicToChina(bean.BIRTHDAY_TIME,'BirthdayTimeChinese')" cancelText='取消'
           doneText='完成'></ion-datetime>
       </ion-item>

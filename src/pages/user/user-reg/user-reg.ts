@@ -87,24 +87,25 @@ export class UserRegPage {
     this.sendCodeText = "60秒";
     this.i = 60;
     this.SetTimeValue();
-    this.toPostService.Post("Public/SendCode", { "para": [{ "K": "phone", V: control.value }] }, (currMsg) => {
+    this.toPostService.Post("Public/SendCode", { "Data": { "phoneNum": control.value } }, (currMsg) => {
       if (currMsg.IsError) {
         this.commonService.hint(currMsg.Message)
       } else {
         this.commonService.showLongToast("发送成功");
       }
     })
+
   }
 
   SubmitFather() {
     var postBean: any = {
-      para: [{ K: "name", V: this.fatherName }]
+      Data: { "name": this.fatherName }
     }
-    this.toPostService.List("UserInfo/UserInfoSingleByName", postBean, (currMsg) => {
+    this.toPostService.Post("UserInfo/SingleByName", postBean, (currMsg) => {
       if (currMsg.IsError) {
         this.commonService.hint(currMsg.Message)
       } else {
-        if (currMsg.totalCount == 0) {
+        if (currMsg.Data.length == 0) {
           this.para.push({ "V": this.fatherName })
           this.fatherLabel = '请输入' + this.fatherName + "的父亲";
           this.fatherName = '';
@@ -117,15 +118,16 @@ export class UserRegPage {
           else {
             alert.setTitle('选择' + this.para[this.para.length - 1].V + '的父亲');
           }
-
-          currMsg.data.forEach(element => {
+          for (let index = 0; index < currMsg.Data.length; index++) {
+            const element = currMsg.Data[index];
             alert.addInput({
               type: 'radio',
               label: element.FatherName + "=>" + element.NAME,
               value: element.ID + "|" + element.NAME,
               checked: false
             });
-          });
+          }
+
           alert.addInput({
             type: 'radio',
             label: '都不是',
@@ -155,7 +157,7 @@ export class UserRegPage {
       }
     })
   }
-  
+
   submit() {
     if (this.userForm.invalid) {
       this.formErrors = this.commonService.FormValidMsg(this.userForm, this.validateMessages);
@@ -198,21 +200,17 @@ export class UserRegPage {
     }
     console.log(inDate);
     var postBean = {
-      data: inDate.substr(0, inDate.indexOf('T')),
-      para: [{ K: "inType", V: "china" }]
+      Data: { "Data": inDate.substr(0, inDate.indexOf('T')) },
     }
-    this.toPostService.Post("Public/GetChineseCalendar", postBean, (currMsg) => {
+    this.toPostService.Post("Public/GetSolarDate", postBean, (currMsg) => {
       if (currMsg.IsError) {
-        this.commonService.hint(currMsg.Message)
+        this.commonService.hint(currMsg.Msg)
       }
       else {
-        switch (outDateType) {
-          case "BIRTHDAY_TIME":
-            var str = currMsg.Message + inDate.substr(inDate.indexOf('T'));
-            this.loadTimeBirthday = new Date();
-            this.bean.BIRTHDAY_TIME = str;
-            break;
-        }
+        var str = currMsg.Msg + inDate.substr(inDate.indexOf('T'));
+        console.log(str)
+        this.loadTimeBirthday = new Date();
+        this.bean.BirthdayTimeChinese = str;
       }
     });
 
@@ -225,20 +223,17 @@ export class UserRegPage {
         break;
     }
     var postBean = {
-      data: inDate.substr(0, inDate.indexOf('T'))
+      Data: { "Data": inDate.substr(0, inDate.indexOf('T')) },
     }
-    this.toPostService.Post("Public/GetChineseCalendar", postBean, (currMsg) => {
+    this.toPostService.Post("Public/GetLunarDate", postBean, (currMsg) => {
       if (currMsg.IsError) {
-        this.commonService.hint(currMsg.Message)
+        this.commonService.hint(currMsg.Msg)
       }
       else {
-        switch (outDateType) {
-          case "BirthdayTimeChinese":
-            var str = currMsg.Message + inDate.substr(inDate.indexOf('T'));
-            this.loadTimeBirthday = new Date();
-            this.bean.BirthdayTimeChinese = str;
-            break;
-        }
+        var str = currMsg.Msg + inDate.substr(inDate.indexOf('T'));
+        console.log(str)
+        this.loadTimeBirthday = new Date();
+        this.bean.BirthdayTimeChinese = str;
       }
     });
   }
