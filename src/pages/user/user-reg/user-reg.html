@@ -62,20 +62,20 @@
     </ion-item-group>
     <ion-item-divider color="light">出生信息</ion-item-divider>
     <ion-item-group>
-      <ion-item-group>
-        <ion-item>
-          <ion-label>阴历</ion-label>
-          <ion-datetime [ngModelOptions]="{standalone: true}" style="margin:0px;padding:0px" displayFormat="YYYY年MMM DD日H时" min="1661"
-            [(ngModel)]="bean.BirthdayTimeChinese" (ionChange)="ChinaToPubic(bean.BirthdayTimeChinese,'BIRTHDAY_TIME')" cancelText='取消'
-            doneText='完成'></ion-datetime>
-        </ion-item>
-      </ion-item-group>
+      <ion-item>
+        <ion-label>选择日期</ion-label>
+        <ion-datetime [ngModelOptions]="{standalone: true}" style="margin:0px;padding:0px" pickerFormat="YYYY MM DD HH" displayFormat="YYYY年MMM月DD日HH时"
+          min="1661" [(ngModel)]="bean.BIRTHDAY_TIME" (ionChange)="DoneBirthdayTime(bean.BIRTHDAY_TIME)" cancelText='取消' doneText='确定'></ion-datetime>
+      </ion-item>
+      <ion-item>
+        <ion-label>阴历</ion-label>
+        <ion-label item-end>{{lunlarDate}}</ion-label>
+      </ion-item>
       <ion-item>
         <ion-label>阳历</ion-label>
-        <ion-datetime [ngModelOptions]="{standalone: true}" style="margin:0px;padding:0px" displayFormat="YYYY年MMM DD日H时" min="1661"
-          [(ngModel)]="bean.BIRTHDAY_TIME" (ionChange)="PubicToChina(bean.BIRTHDAY_TIME,'BirthdayTimeChinese')" cancelText='取消'
-          doneText='完成'></ion-datetime>
+        <ion-label item-end>{{solarDate}}</ion-label>
       </ion-item>
+
       <ion-item>
         <ion-label>{{validateMessages.birthday_place.aliasName}}</ion-label>
         <ion-input formControlName="birthday_place"></ion-input>

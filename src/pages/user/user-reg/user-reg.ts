@@ -34,6 +34,8 @@ export class UserRegPage {
 
   }
 
+  lunlarDate=""
+  solarDate=""
   constructor(private formBuilder: FormBuilder,
     public navCtrl: NavController,
     public commonService: CommonService,
@@ -79,7 +81,7 @@ export class UserRegPage {
   SendCode($event) {
     const control = this.userForm.get("loginName")
     console.log(control);
-    if (control && control.dirty && !control.valid) {
+    if ((control && control.dirty && !control.valid) || control.value=='') {
       this.commonService.hint('电话号码无效!')
       return;
     }
@@ -191,51 +193,41 @@ export class UserRegPage {
   GoBack() {
     this.navCtrl.pop();
   }
-  ChinaToPubic(inDate: any, outDateType: string) {
-    console.log("ChinaToPubic:" + outDateType);
-    switch (outDateType) {
-      case "BIRTHDAY_TIME":
-        if ((this.loadTimeBirthday.getTime() + 3000) > new Date().getTime()) return;
-        break;
-    }
-    console.log(inDate);
-    var postBean = {
-      Data: { "Data": inDate.substr(0, inDate.indexOf('T')) },
-    }
-    this.toPostService.Post("Public/GetSolarDate", postBean, (currMsg) => {
-      if (currMsg.IsError) {
-        this.commonService.hint(currMsg.Msg)
-      }
-      else {
-        var str = currMsg.Msg + inDate.substr(inDate.indexOf('T'));
-        console.log(str)
-        this.loadTimeBirthday = new Date();
-        this.bean.BirthdayTimeChinese = str;
-      }
-    });
 
-  }
-  PubicToChina(inDate: any, outDateType: string) {
-    console.log("PubicToChina:" + outDateType);
-    switch (outDateType) {
-      case "BirthdayTimeChinese":
-        if ((this.loadTimeBirthday.getTime() + 3000) > new Date().getTime()) return;
-        break;
-    }
-    var postBean = {
-      Data: { "Data": inDate.substr(0, inDate.indexOf('T')) },
-    }
-    this.toPostService.Post("Public/GetLunarDate", postBean, (currMsg) => {
-      if (currMsg.IsError) {
-        this.commonService.hint(currMsg.Msg)
-      }
-      else {
-        var str = currMsg.Msg + inDate.substr(inDate.indexOf('T'));
-        console.log(str)
-        this.loadTimeBirthday = new Date();
-        this.bean.BirthdayTimeChinese = str;
-      }
+  DoneBirthdayTime(inDate: any){
+    let dataStr=inDate.substr(0, inDate.indexOf('T'))
+    let alert = this.alertCtrl.create({
+      title: '日期类型',
+      message:"选择的时间为："+dataStr,
+      buttons: [
+        {
+          text: '农历',
+          handler: () => {
+            this.lunlarDate=dataStr
+            this.solarDate=""
+            this.toPostService.Post("Public/GetSolarDate", {Data: { "Data": dataStr }}, (currMsg) => {
+              if (currMsg.IsSuccess) {
+                this.solarDate=currMsg.Msg
+              }
+            });
+          }
+        },
+        {
+          text: '阳历',
+          handler: () => {
+            this.solarDate=dataStr
+            this.lunlarDate=""
+            this.toPostService.Post("Public/GetLunarDate", {Data: { "Data": dataStr }}, (currMsg) => {
+              if (currMsg.IsSuccess) {
+                this.lunlarDate=currMsg.Msg
+              }
+            });
+          }
+        }
+      ]
     });
+    alert.present();
   }
+
 
 }
