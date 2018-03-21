@@ -32,18 +32,14 @@
       <ion-item-divider color="light">基础资料</ion-item-divider>
       <ion-item>
         <ion-label>用户姓名</ion-label>
-        <ion-label item-end>{{para[0].V}}</ion-label>
+        <ion-label item-end>{{bean.parentArr[0].V}}</ion-label>
       </ion-item>
       <ion-item>
-        <ion-label>{{para[0].V}}父亲</ion-label>
-        <ion-label item-end>{{para[1].V}}</ion-label>
+        <ion-label>{{bean.parentArr[0].V}}父亲</ion-label>
+        <ion-label item-end>{{bean.parentArr[1].V}}</ion-label>
       </ion-item>
       <ion-item>
-        <ion-label>{{validateMessages.userName.aliasName}}</ion-label>
-        <ion-input type="text" formControlName="userName" placeholder="用户姓名"></ion-input>
-      </ion-item>
-      <ion-item>
-        <ion-label>{{validateMessages.level_id.aliasName}}</ion-label>
+        <ion-label>{{validationMessages.level_id.aliasName}}</ion-label>
         <ion-select formControlName="level_id" okText="确定" cancelText="取消">
           <ion-option value="1">老大</ion-option>
           <ion-option value="2">老二</ion-option>
@@ -57,7 +53,7 @@
         </ion-select>
       </ion-item>
       <ion-item>
-        <ion-label>{{validateMessages.sex.aliasName}}</ion-label>
+        <ion-label>{{validationMessages.sex.aliasName}}</ion-label>
         <ion-select formControlName="sex" okText="确定" cancelText="取消">
           <ion-option value="男">男</ion-option>
           <ion-option value="女">女</ion-option>
@@ -67,21 +63,21 @@
     <ion-item-divider color="light">出生信息</ion-item-divider>
     <ion-item-group>
       <ion-item>
-        <ion-label>选择日期</ion-label>
+        <ion-label>{{this.bean.YEARS_TYPE}}</ion-label>
         <ion-datetime [ngModelOptions]="{standalone: true}" style="margin:0px;padding:0px" pickerFormat="YYYY MM DD HH" displayFormat="YYYY年MMM月DD日HH时"
           min="1661" [(ngModel)]="bean.BIRTHDAY_TIME" (ionChange)="DoneBirthdayTime(bean.BIRTHDAY_TIME)" cancelText='取消' doneText='确定'></ion-datetime>
       </ion-item>
-      <ion-item>
-        <ion-label>阴历</ion-label>
+      <ion-item *ngIf="this.bean.YEARS_TYPE=='阳历'">
+        <ion-label>农历</ion-label>
         <ion-label item-end>{{lunlarDate}}</ion-label>
       </ion-item>
-      <ion-item>
+      <ion-item *ngIf="this.bean.YEARS_TYPE=='农历'">
         <ion-label>阳历</ion-label>
         <ion-label item-end>{{solarDate}}</ion-label>
       </ion-item>
 
       <ion-item>
-        <ion-label>{{validateMessages.birthday_place.aliasName}}</ion-label>
+        <ion-label>{{validationMessages.birthday_place.aliasName}}</ion-label>
         <ion-input formControlName="birthday_place"></ion-input>
       </ion-item>
     </ion-item-group>

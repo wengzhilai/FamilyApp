@@ -16,30 +16,26 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 })
 export class UserRegPage {
   loadTimeBirthday: Date = new Date("1900-1-1");
-  para: Array<any> = [];
   fatherIsTrue: boolean = false;
   fatherLabel: string = "您的姓名";
   fatherName: string = "";
 
 
   userForm: FormGroup;
-  validateMessages: any;
+  validationMessages: any;
   timer: any;
   formErrors: any = {};
   bean = {
     loginName: '',
-    userName: '',
     password: '',
     // version: Config.version,
     code: '',
-    type: '0',
     BIRTHDAY_TIME: '',
-    BirthdayTimeChinese: ''
-
+    YEARS_TYPE: "选择时间",
+    parentArr: []
   }
-
-  lunlarDate=""
-  solarDate=""
+  lunlarDate = ""
+  solarDate = ""
   constructor(private formBuilder: FormBuilder,
     public navCtrl: NavController,
     public commonService: CommonService,
@@ -48,17 +44,15 @@ export class UserRegPage {
     public toPostService: ToPostService) {
     this.userForm = this.formBuilder.group({
       loginName: ['', [Validators.required, Validators.minLength(11), Validators.maxLength(11)]],
-      userName: ['', [Validators.required, Validators.minLength(1), Validators.maxLength(11)]],
       code: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(4)]],
       password: ['', [Validators.required, Validators.minLength(1), Validators.maxLength(11)]],
-      level_id: [''],
-      sex: [''],
-      birthday_place: [''],
+      level_id: ['1'],
+      sex: ['男'],
+      birthday_place: ['四川仪陇岐山翁家坝'],
     });
-    this.validateMessages = {
+    this.validationMessages = {
       'loginName': { 'aliasName': '登录名' },
       'code': { 'aliasName': '短信验证码' },
-      'userName': { 'aliasName': '姓名' },
       'pollCode': { 'aliasName': '推荐码' },
       'password': { 'aliasName': '密码' },
       'level_id': { 'aliasName': '排行' },
@@ -85,7 +79,7 @@ export class UserRegPage {
   SendCode($event) {
     const control = this.userForm.get("loginName")
     console.log(control);
-    if ((control && control.dirty && !control.valid) || control.value=='') {
+    if ((control && control.dirty && !control.valid) || control.value == '') {
       this.commonService.hint('电话号码无效!')
       return;
     }
@@ -112,22 +106,23 @@ export class UserRegPage {
         this.commonService.hint(currMsg.Message)
       } else {
         if (currMsg.Data.length == 0) {
-          if(this.para.length>2){
+          if (this.bean.parentArr.length > 2) {
             this.commonService.hint("您输入的资料在本系统里不存在，请联系管理员")
             return
           }
 
-          this.para.push({ "V": this.fatherName })
+          this.bean.parentArr.push({ "V": this.fatherName })
           this.fatherLabel = '请输入' + this.fatherName + "的父亲";
           this.fatherName = '';
         }
         else {
+
           let alert = this.alertCtrl.create();
-          if (this.para.length == 0) {
+          if (this.bean.parentArr.length == 0) {
             alert.setTitle('选择您的姓名');
           }
           else {
-            alert.setTitle('选择' + this.para[this.para.length - 1].V + '的父亲');
+            alert.setTitle('选择' + this.bean.parentArr[this.bean.parentArr.length - 1].V + '的父亲');
           }
 
           for (let index = 0; index < currMsg.Data.length; index++) {
@@ -151,16 +146,23 @@ export class UserRegPage {
             text: '确定',
             handler: data => {
               if (data != '0') {
-                this.para.push({ "V": data.NAME, K: data.ID })
-                this.para.push({ "V": data.FatherName, K: data.FATHER_ID })
+
+                if (this.bean.parentArr.length == 0 && (data["LOGIN_NAME"] != 'undefined' && data["LOGIN_NAME"] != null && data["LOGIN_NAME"] != '')) {
+                  this.commonService.hint("该用户已经注册了，登录帐号为：" + data.LOGIN_NAME)
+                  return
+                }
+
+
+                this.bean.parentArr.push({ "V": data.NAME, K: data.ID })
+                this.bean.parentArr.push({ "V": data.FatherName, K: data.FATHER_ID })
                 this.fatherIsTrue = true;
-                console.log(this.para);
+                console.log(this.bean.parentArr);
               }
               else {
-                this.para.push({ "V": this.fatherName })
+                this.bean.parentArr.push({ "V": this.fatherName })
                 this.fatherLabel = '请输入' + this.fatherName + "的父亲";
                 this.fatherName = '';
-                console.log(this.para);
+                console.log(this.bean.parentArr);
               }
             }
           });
@@ -172,21 +174,16 @@ export class UserRegPage {
 
   submit() {
     if (this.userForm.invalid) {
-      this.formErrors = this.commonService.FormValidMsg(this.userForm, this.validateMessages);
-      let errMsg = "";
-      for (const field in this.formErrors) {
-        if (this.formErrors[field] != '') {
-          errMsg += "<p>" + this.formErrors[field] + "</p>"
-        }
-      }
-      this.commonService.hint(errMsg, '输入无效')
+      let formErrors = this.commonService.FormValidMsg(this.userForm, this.validationMessages);
+      console.log(formErrors);
+      this.commonService.hint(formErrors.ErrorMessage, '输入无效')
       return;
     }
-    console.log(this.userForm.value)
     // this.bean=this.userForm.value
     for (var key in this.userForm.value) {
       this.bean[key] = this.userForm.value[key];
     }
+    console.log(this.bean)
 
     // this.toPostService.Post("UserInfo/UserInfoReg", this.bean, (currMsg) => {
     //   if (currMsg.IsError) {
@@ -204,20 +201,21 @@ export class UserRegPage {
     this.navCtrl.pop();
   }
 
-  DoneBirthdayTime(inDate: any){
-    let dataStr=inDate.substr(0, inDate.indexOf('T'))
+  DoneBirthdayTime(inDate: any) {
+    let dataStr = inDate.substr(0, inDate.indexOf('T'))
     let alert = this.alertCtrl.create({
       title: '日期类型',
-      message:"选择的时间为："+dataStr,
+      message: "选择的时间为：" + dataStr,
       buttons: [
         {
           text: '农历',
           handler: () => {
-            this.lunlarDate=dataStr
-            this.solarDate=""
-            this.toPostService.Post("Public/GetSolarDate", {Data: { "Data": dataStr }}, (currMsg) => {
+            this.bean.YEARS_TYPE = "农历"
+            this.lunlarDate = dataStr
+            this.solarDate = ""
+            this.toPostService.Post("Public/GetSolarDate", { Data: { "Data": dataStr } }, (currMsg) => {
               if (currMsg.IsSuccess) {
-                this.solarDate=currMsg.Msg
+                this.solarDate = currMsg.Msg
               }
             });
           }
@@ -225,11 +223,12 @@ export class UserRegPage {
         {
           text: '阳历',
           handler: () => {
-            this.solarDate=dataStr
-            this.lunlarDate=""
-            this.toPostService.Post("Public/GetLunarDate", {Data: { "Data": dataStr }}, (currMsg) => {
+            this.bean.YEARS_TYPE = "阳历"
+            this.solarDate = dataStr
+            this.lunlarDate = ""
+            this.toPostService.Post("Public/GetLunarDate", { Data: { "Data": dataStr } }, (currMsg) => {
               if (currMsg.IsSuccess) {
-                this.lunlarDate=currMsg.Msg
+                this.lunlarDate = currMsg.Msg
               }
             });
           }
