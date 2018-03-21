@@ -1,9 +1,13 @@
+// 1、先输入注册用户的姓名，
+// 2、如果系统存在该用户，并且没有注册为用户，则提示用户，是否以这个用户注册，如果已经注册则不可以注册
+// 3、如果系统不存在该用户，则让用户输入父亲的姓名，如查不存在，再输入爷爷的姓名，如果爷爷不存在，则不允许注册
+// 4、注册时填写相应的字段
+
 import { CommonService } from "../../../Service/Common.Service";
 import { ToPostService } from "../../../Service/ToPost.Service";
 import { NavController, ToastController, AlertController, IonicPage } from 'ionic-angular';
 import { Component, } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { Config } from "../../../Classes/Config";
 
 @IonicPage()
 @Component({
@@ -14,7 +18,7 @@ export class UserRegPage {
   loadTimeBirthday: Date = new Date("1900-1-1");
   para: Array<any> = [];
   fatherIsTrue: boolean = false;
-  fatherLabel: string = "您父亲姓名";
+  fatherLabel: string = "您的姓名";
   fatherName: string = "";
 
 
@@ -108,6 +112,11 @@ export class UserRegPage {
         this.commonService.hint(currMsg.Message)
       } else {
         if (currMsg.Data.length == 0) {
+          if(this.para.length>2){
+            this.commonService.hint("您输入的资料在本系统里不存在，请联系管理员")
+            return
+          }
+
           this.para.push({ "V": this.fatherName })
           this.fatherLabel = '请输入' + this.fatherName + "的父亲";
           this.fatherName = '';
@@ -115,17 +124,18 @@ export class UserRegPage {
         else {
           let alert = this.alertCtrl.create();
           if (this.para.length == 0) {
-            alert.setTitle('选择您的父亲');
+            alert.setTitle('选择您的姓名');
           }
           else {
             alert.setTitle('选择' + this.para[this.para.length - 1].V + '的父亲');
           }
+
           for (let index = 0; index < currMsg.Data.length; index++) {
             const element = currMsg.Data[index];
             alert.addInput({
               type: 'radio',
               label: element.FatherName + "=>" + element.NAME,
-              value: element.ID + "|" + element.NAME,
+              value: element,
               checked: false
             });
           }
@@ -141,8 +151,8 @@ export class UserRegPage {
             text: '确定',
             handler: data => {
               if (data != '0') {
-                var tmpArr = data.split('|')
-                this.para.push({ "V": tmpArr[1], K: tmpArr[0] })
+                this.para.push({ "V": data.NAME, K: data.ID })
+                this.para.push({ "V": data.FatherName, K: data.FATHER_ID })
                 this.fatherIsTrue = true;
                 console.log(this.para);
               }

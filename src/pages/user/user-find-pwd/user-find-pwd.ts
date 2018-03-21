@@ -3,7 +3,6 @@ import { ToPostService } from "../../../Service/ToPost.Service";
 import { NavController, Button, ToastController, IonicPage } from 'ionic-angular';
 import { Component, ViewChild, } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { AppGlobal } from "../../../Classes/AppGlobal";
 
 @IonicPage()
 @Component({

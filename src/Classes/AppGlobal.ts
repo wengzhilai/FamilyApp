@@ -15,14 +15,6 @@ export class AppGlobal {
    */
   public static enumModelArr: Array<EnumModel> = new Array<EnumModel>();
 
-  /**
-   * 物业ID
-   * 
-   * @static
-   * @type {number}
-   * @memberof AppGlobal
-   */
-  private static _postBaseModel: PostBaseModel;
   constructor() {
     console.log("init AppGlobal")
   }
@@ -37,11 +29,6 @@ export class AppGlobal {
     return NgXCookies.getCookie('token');
   }
 
-  public static SetPostBaseModel(postBaseModel: PostBaseModel) {
-    this._postBaseModel = postBaseModel;
-    console.log("保存postBaseModel：" + postBaseModel)
-    NgXCookies.setCookie("PostBaseModel", JSON.stringify(postBaseModel));
-  }
 
   public static GetPostBaseModel(): PostBaseModel {
     let str = NgXCookies.getCookie('PostBaseModel');
