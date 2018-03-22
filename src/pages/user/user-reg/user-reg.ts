@@ -26,13 +26,16 @@ export class UserRegPage {
   timer: any;
   formErrors: any = {};
   bean = {
-    loginName: '',
-    password: '',
-    // version: Config.version,
-    code: '',
-    BIRTHDAY_TIME: '',
+    BIRTHDAY_TIME: "",
     YEARS_TYPE: "选择时间",
-    parentArr: []
+    birthday_place: "四川仪陇岐山翁家坝",
+    code: "",
+    level_id: "1",
+    loginName: "",
+    parentArr: [],
+    password: "",
+    pollCode: "",
+    sex: "男"
   }
   lunlarDate = ""
   solarDate = ""
@@ -184,15 +187,16 @@ export class UserRegPage {
       this.bean[key] = this.userForm.value[key];
     }
     console.log(this.bean)
+    let postBean={Data:this.bean}
 
-    // this.toPostService.Post("UserInfo/UserInfoReg", this.bean, (currMsg) => {
-    //   if (currMsg.IsError) {
-    //     this.commonService.hint(currMsg.Message)
-    //   } else {
-    //     this.commonService.hint("注册成功");
-    //     this.navCtrl.pop();
-    //   }
-    // })
+    this.toPostService.Post("UserInfo/Register", postBean, (currMsg) => {
+      if (currMsg.IsError) {
+        this.commonService.hint(currMsg.Message)
+      } else {
+        this.commonService.hint("注册成功");
+        // this.navCtrl.pop();
+      }
+    })
   }
   reset() {
     this.userForm.reset();
