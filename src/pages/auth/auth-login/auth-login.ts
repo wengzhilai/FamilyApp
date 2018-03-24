@@ -8,7 +8,7 @@ import { AppGlobal } from "../../../Classes/AppGlobal";
 import { Config as Cif } from "../../../Classes/Config";
 import { TabsPage } from "../../tabs/tabs";
 import { AlertController } from 'ionic-angular';
-
+import {AppReturnDTO  } from "../../../Model/Transport/AppReturnDTO";
 import { TranslateService } from '@ngx-translate/core'
 @IonicPage()
 @Component({
@@ -164,31 +164,23 @@ export class AuthLoginPage {
    * @param password 
    */
   PostGetToken(loginName, password) {
-    return this.toPostService.PostContentType(
-      'token',
-      "UserName=" + encodeURI(loginName) + "&password=" + encodeURI(password) + "&grant_type=password&client_id=BSBMS",
-      "application/x-www-form-urlencoded"
-    )
-      .then((res: any) => {
-        if (res == null) {
-          this.commonService.hint(this.commonService.LanguageStr("public.LoginError"))
-          return false;
-        }
-        if (res.access_token) {
-          //保存用户名，仅仅用于在推送消息的时候，检测该消息是否对该用户有效，tabs.ts
-          AppGlobal.CooksSet("loginName", this.userForm.value.loginName)
-          AppGlobal.SetToken(res.access_token);
-          AppGlobal.SetProperty(null); //保存物业
-          return true
-        }
-        else {
-          this.commonService.hint(res);
-          return false
-        };
-      }, (err) => {
-        this.commonService.hint(err, this.commonService.LanguageStr("public.Error"));
-        return false
-      })
+    return this.toPostService.Post('auth/UserLogin',{loginName:this.userForm.value.loginName,passWord:this.userForm.value.password})
+    .then((res: AppReturnDTO) => {
+      this.commonService.hideLoading();
+      if(res==null){
+        this.commonService.hint('登录错误，请联系管理员')
+        return;
+      }
+      if (res.IsSuccess) {
+        AppGlobal.SetToken(res.Code);
+        this.navCtrl.push(TabsPage);
+      }
+      else {
+        this.commonService.hint(res.Msg);
+      };
+    },(err)=>{
+      this.commonService.hint(err,'错误');
+    })
   }
 
 

@@ -26,51 +26,12 @@ export class TabsPage {
   ) {
 
     console.log("开户首页订阅");
-    Config.homeSubscribeNotification = true;
-
-    this.JPushNotification();
-    // setTimeout(() => {
-    //   let t = {
-    //     "sdktype": "JPUSH",
-    //     "app": "com.isoftasia.bspls",
-    //     "PageName": "TodoPropertySingleOnePage",
-    //     "cn.jpush.android.MSG_ID": "36028797455821261",
-    //     "cn.jpush.android.ALERT_TYPE": "-1",
-    //     "cn.jpush.android.NOTIFICATION_ID": 529859453,
-    //     "WorkflowStepHistoryId": "856",
-    //     "PropertyId": "1",
-    //     "cn.jpush.android.ALERT": "zuhu056CO632[合同流程-商铺]生成二期保证金",
-    //     "Version": "1",
-    //     "cn.jpush.android.EXTRA": {
-    //       "WorkflowStepHistoryId": 856,
-    //       "PageName": "TodoPropertySingleOnePage",
-    //       "PropertyId": 1,
-    //       "Version": 1,
-    //       "EventStepId": 110023,
-    //       "BacklogId": 1986,
-    //       "ContractMasterId": 637
-    //     },
-    //     "EventStepId": "110023",
-    //     "cn.jpush.android.NOTIFICATION_TYPE": "0",
-    //     "ContractMasterId": "637",
-    //     "BacklogId": "1986"
-    //   }
-    //   this.JPushNotificationHandle(t)
-    // }, 5000);
+    // Config.homeSubscribeNotification = true;
+    // this.JPushNotification();
   }
 
   ionViewDidEnter() {
-    let activeNav = this.tabs.getSelected();
-    let name = activeNav.getActive().name;
-    console.log("推送返回，当前页面是："+name)
-    if(name== "TodoPropertyListPage"){
-      console.log("在tabs页，刷新："+name)
-      activeNav.getActive().getNav().setRoot("TodoPropertyListPage")
-    }
-    else if(name== "TodoListPage"){
-      console.log("在tabs页，刷新："+name)
-      activeNav.getActive().getNav().setRoot("TodoListPage")
-    }
+
   }
 
   JPushNotification() {

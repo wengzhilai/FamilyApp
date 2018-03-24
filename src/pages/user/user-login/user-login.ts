@@ -88,12 +88,7 @@ export class UserLoginPage {
     this.commonService.showLoading();
 
     this.toPostService.Post('auth/UserLogin',{loginName:this.userForm.value.loginName,passWord:this.userForm.value.password})
-    // this.toPostService
-    //   .PostContentType(
-    //     'auth/UserLogin', 
-    //     "UserName=" + encodeURI(this.userForm.value.loginName) + "&password=" + encodeURI(this.userForm.value.password) + "&grant_type=password&client_id=bspls",
-    //     "application/x-www-form-urlencoded"
-    //   )
+
       .then((res: AppReturnDTO) => {
         this.commonService.hideLoading();
         if(res==null){

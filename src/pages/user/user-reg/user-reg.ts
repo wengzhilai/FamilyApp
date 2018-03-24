@@ -91,8 +91,8 @@ export class UserRegPage {
     this.i = 60;
     this.SetTimeValue();
     this.toPostService.Post("Public/SendCode", { "Data": { "phoneNum": control.value } }, (currMsg) => {
-      if (currMsg.IsError) {
-        this.commonService.hint(currMsg.Message)
+      if (!currMsg.IsSuccess) {
+        this.commonService.hint(currMsg.Msg)
       } else {
         this.commonService.showLongToast("发送成功");
       }
@@ -105,8 +105,8 @@ export class UserRegPage {
       Data: { "name": this.fatherName }
     }
     this.toPostService.Post("UserInfo/SingleByName", postBean, (currMsg) => {
-      if (currMsg.IsError) {
-        this.commonService.hint(currMsg.Message)
+      if (!currMsg.IsSuccess) {
+        this.commonService.hint(currMsg.Msg)
       } else {
         if (currMsg.Data.length == 0) {
           if (this.bean.parentArr.length > 2) {
@@ -190,11 +190,11 @@ export class UserRegPage {
     let postBean={Data:this.bean}
 
     this.toPostService.Post("UserInfo/Register", postBean, (currMsg) => {
-      if (currMsg.IsError) {
-        this.commonService.hint(currMsg.Message)
-      } else {
+      if (currMsg.IsSuccess) {
         this.commonService.hint("注册成功");
-        // this.navCtrl.pop();
+        this.navCtrl.pop();
+      } else {
+        this.commonService.hint(currMsg.Msg)
       }
     })
   }

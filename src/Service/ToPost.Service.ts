@@ -86,12 +86,10 @@ export class ToPostService {
         console.log("返回结果：");
         let response: any = res.json();
         this.commonService.PlatformsExists("core") ? console.log(response) : console.log(JSON.stringify(response));
-        if (response.IsSuccess) {
-          if (callback) {
-            callback(response);
-          }
+        if (callback) {
+          callback(response);
         }
-        else {
+        if (!response.IsSuccess) {
           this.commonService.PlatformsExists("core") ? console.warn(response.Msg) : console.warn(JSON.stringify(response.Msg));
         }
         console.timeEnd("Post时间");
