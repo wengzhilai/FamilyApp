@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
-import { IonicPage,NavController, App,FabContainer } from 'ionic-angular';
+import { IonicPage, NavController, App, FabContainer } from 'ionic-angular';
 
 import { NetronGraph } from '../../../Classes/Netron/Graph';
 import { NetronElement } from "../../../Classes/Netron/Element";
@@ -28,53 +28,52 @@ export class HomeIndexPage implements OnInit {
     public toPostService: ToPostService
   ) {
 
-    
+
   }
-  
-  onSucc(){
-      this.toPostService.Single("Family/UserInfoRelative", {}, (currMsg) => {
-        if (currMsg.IsError) {
-          this.commonService.showError(currMsg);
-        } else {
-          this.userRelative=currMsg;
-          this.graph = new NetronGraph(this.mapElement.nativeElement);
-              this.graph.theme = { 
-                background: "#fafafa", 
-                connection: "#000", 
-                selection: "#888", 
-                connector: "#777", 
-                connectorBorder: "#000", 
-                connectorHoverBorder: "#000", 
-                connectorHover: "#0c0" 
-              };
-          for(var i=0;i<this.userRelative.ItemList.length;i++){
-            var item=this.userRelative.ItemList[i];
-            var e1 = this.graph.addElement(this.personTemplate, { x: item.x*50+100, y: item.y*100+100 },item, "翁志来");
-          }
+
+  onSucc() {
+    this.toPostService.Single("Family/UserInfoRelative", {}, (currMsg) => {
+      if (!currMsg.IsSuccess) {
+        this.commonService.hint(currMsg.Msg);
+      } else {
+        this.userRelative = currMsg.Data;
+        this.graph = new NetronGraph(this.mapElement.nativeElement);
+        this.graph.theme = {
+          background: "#fafafa",
+          connection: "#000",
+          selection: "#888",
+          connector: "#777",
+          connectorBorder: "#000",
+          connectorHoverBorder: "#000",
+          connectorHover: "#0c0"
+        };
+        for (var i = 0; i < this.userRelative.ItemList.length; i++) {
+          var item = this.userRelative.ItemList[i];
+          var e1 = this.graph.addElement(this.personTemplate, { x: item.x * 50 + 100, y: item.y * 100 + 100 }, item, "翁志来");
         }
-      })
+      }
+    })
   }
 
   ngOnInit() {
-    if(AppGlobal.GetToken()==null){
+    if (AppGlobal.GetToken() == null) {
       this.appCtrl.getRootNav().push('UserLoginPage');
     }
-    else
-    {
+    else {
       this.onSucc();
     }
-  } 
-  
-  test(){
+  }
+
+  test() {
     var graph = new NetronGraph(this.mapElement.nativeElement);
-    graph.theme = { 
-      background: "#fafafa", 
-      connection: "#000", 
-      selection: "#888", 
-      connector: "#777", 
-      connectorBorder: "#000", 
-      connectorHoverBorder: "#000", 
-      connectorHover: "#0c0" 
+    graph.theme = {
+      background: "#fafafa",
+      connection: "#000",
+      selection: "#888",
+      connector: "#777",
+      connectorBorder: "#000",
+      connectorHoverBorder: "#000",
+      connectorHover: "#0c0"
     };
     // var e1 = graph.addElement(this.personTemplate, { x: 250, y: 50 }, "Michael Scott");
     // var e2 = graph.addElement(this.personTemplate, { x: 150, y: 150 }, "Angela Martin");
@@ -99,9 +98,10 @@ export class HomeIndexPage implements OnInit {
         type: "Person [in]",
         description: "Manager",
         getConnectorPosition: (element) => {
-          return { 
-            x: Math.floor(element.rectangle.width / 2), 
-            y: 0 }
+          return {
+            x: Math.floor(element.rectangle.width / 2),
+            y: 0
+          }
         }
       },
       {
@@ -109,14 +109,14 @@ export class HomeIndexPage implements OnInit {
         type: "Person [out] [array]",
         description: "Reports",
         getConnectorPosition: (element) => {
-          return { 
-            x: Math.floor(element.rectangle.width / 2), 
-            y: element.rectangle.height 
+          return {
+            x: Math.floor(element.rectangle.width / 2),
+            y: element.rectangle.height
           }
         }
       }
     ],
-    paint:(element, context)=> {
+    paint: (element, context) => {
       var rectangle = element.rectangle;
       rectangle.x += context.canvas.offsetLeft;
       rectangle.y += context.canvas.offsetTop;
@@ -130,14 +130,14 @@ export class HomeIndexPage implements OnInit {
       context.fillStyle = context.strokeStyle;
       context.textBaseline = "bottom";
       context.textAlign = "center";
-      for(var i=0;i<element.content.length;i++){
-        context.fillText(element.content[i], rectangle.x + (rectangle.width / 2), rectangle.y + 20 + (20*i));
+      for (var i = 0; i < element.content.length; i++) {
+        context.fillText(element.content[i], rectangle.x + (rectangle.width / 2), rectangle.y + 20 + (20 * i));
       }
     },
-    edit:(element:NetronElement, context, point:any)=>{
-      this.fab._mainButton.getElementRef().nativeElement.parentNode.style.display=""
-      this.fab._mainButton.getElementRef().nativeElement.parentNode.style.left=(element.rectangle.x-15)+"px"
-      this.fab._mainButton.getElementRef().nativeElement.parentNode.style.top=(element.rectangle.y+15)+"px"
+    edit: (element: NetronElement, context, point: any) => {
+      this.fab._mainButton.getElementRef().nativeElement.parentNode.style.display = ""
+      this.fab._mainButton.getElementRef().nativeElement.parentNode.style.left = (element.rectangle.x - 15) + "px"
+      this.fab._mainButton.getElementRef().nativeElement.parentNode.style.top = (element.rectangle.y + 15) + "px"
       this.fab.toggleList();
       // console.log(point)
       // console.log(this.fab)
@@ -150,46 +150,46 @@ export class HomeIndexPage implements OnInit {
   }
 
   public contentEditor =
-  {
-    input: null,
-    start: function (element, context) {
-      this.element = element;
-      this.canvas = context.canvas;
+    {
+      input: null,
+      start: function (element, context) {
+        this.element = element;
+        this.canvas = context.canvas;
 
-      var rectangle = element.rectangle;
-      rectangle.x += this.canvas.offsetLeft;
-      rectangle.y += this.canvas.offsetTop;
+        var rectangle = element.rectangle;
+        rectangle.x += this.canvas.offsetLeft;
+        rectangle.y += this.canvas.offsetTop;
 
-      this.input = document.createElement('input');
-      this.input.type = "text";
-      this.input.style.position = "absolute";
-      this.input.style.zIndex = 1;
-      this.input.style.top = (rectangle.y + 8) + "px";
-      this.input.style.left = (rectangle.x + 2) + "px";
-      this.input.style.width = (rectangle.width - 5) + "px";
-      this.input.onblur = function (e) {
-        this.commit();
-      }
-      this.input.onkeydown = function (e) {
-        if (e.keyCode == 13) { this.commit(); } // Enter
-        if (e.keyCode == 27) { this.cancel(); } // ESC
-      };
-      this.canvas.parentNode.appendChild(this.input);
-      this.input.value = element.content;
-      this.input.select();
-      this.input.focus();
-    },
-    commit: function () {
-      this.element.setContent(this.input.value);
-      this.cancel();
-    },
-    cancel: function () {
-      if (this.input !== null) {
-        var input = this.input;
-        this.input = null;
-        this.canvas.parentNode.removeChild(input);
-        this.canvas = null;
+        this.input = document.createElement('input');
+        this.input.type = "text";
+        this.input.style.position = "absolute";
+        this.input.style.zIndex = 1;
+        this.input.style.top = (rectangle.y + 8) + "px";
+        this.input.style.left = (rectangle.x + 2) + "px";
+        this.input.style.width = (rectangle.width - 5) + "px";
+        this.input.onblur = function (e) {
+          this.commit();
+        }
+        this.input.onkeydown = function (e) {
+          if (e.keyCode == 13) { this.commit(); } // Enter
+          if (e.keyCode == 27) { this.cancel(); } // ESC
+        };
+        this.canvas.parentNode.appendChild(this.input);
+        this.input.value = element.content;
+        this.input.select();
+        this.input.focus();
+      },
+      commit: function () {
+        this.element.setContent(this.input.value);
+        this.cancel();
+      },
+      cancel: function () {
+        if (this.input !== null) {
+          var input = this.input;
+          this.input = null;
+          this.canvas.parentNode.removeChild(input);
+          this.canvas = null;
+        }
       }
     }
-  }
 }
