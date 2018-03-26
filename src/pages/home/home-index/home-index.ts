@@ -47,10 +47,16 @@ export class HomeIndexPage implements OnInit {
           connectorHoverBorder: "#000",
           connectorHover: "#0c0"
         };
-        for (var i = 0; i < this.userRelative.ItemList.length; i++) {
-          var item = this.userRelative.ItemList[i];
-          var e1 = this.graph.addElement(this.personTemplate, { x: item.x * 50 + 100, y: item.y * 100 + 100 }, item, "翁志来");
+        let tt:any={}
+        for (let i = 0; i < this.userRelative.ItemList.length; i++) {
+          let item = this.userRelative.ItemList[i];
+          // tt.set["e"+item.ID]=item.ID
+          tt["e"+item.ID] = this.graph.addElement(this.personTemplate, { x: item.x * 50 + 100, y: item.y * 100 + 100 }, item.Name, item);
         }
+        this.userRelative.RelativeList.forEach(element => {
+          this.graph.addConnection(tt["e"+element.K].getConnector("reports"), tt["e"+element.V].getConnector("manager"));
+        });
+        console.log(tt)
       }
     })
   }
@@ -61,30 +67,32 @@ export class HomeIndexPage implements OnInit {
     }
     else {
       this.onSucc();
+      // this.test()
     }
   }
 
   test() {
-    var graph = new NetronGraph(this.mapElement.nativeElement);
-    graph.theme = {
-      background: "#fafafa",
-      connection: "#000",
-      selection: "#888",
-      connector: "#777",
-      connectorBorder: "#000",
-      connectorHoverBorder: "#000",
-      connectorHover: "#0c0"
-    };
-    // var e1 = graph.addElement(this.personTemplate, { x: 250, y: 50 }, "Michael Scott");
-    // var e2 = graph.addElement(this.personTemplate, { x: 150, y: 150 }, "Angela Martin");
-    // var e3 = graph.addElement(this.personTemplate, { x: 350, y: 150 }, "Dwight Schrute");
-    // var e4 = graph.addElement(this.personTemplate, { x: 50, y: 250 }, "Kevin Malone");
-    // var e5 = graph.addElement(this.personTemplate, { x: 250, y: 250 }, "Oscar Martinez");
-    // graph.addConnection(e1.getConnector("reports"), e2.getConnector("manager"));
-    // graph.addConnection(e1.getConnector("reports"), e3.getConnector("manager"));
-    // graph.addConnection(e2.getConnector("reports"), e4.getConnector("manager"));
-    // graph.addConnection(e2.getConnector("reports"), e5.getConnector("manager"));
-    // graph.update();
+    // this.graph = new NetronGraph(this.mapElement.nativeElement);
+    
+    // this.graph.theme = {
+    //   background: "#fafafa",
+    //   connection: "#000",
+    //   selection: "#888",
+    //   connector: "#777",
+    //   connectorBorder: "#000",
+    //   connectorHoverBorder: "#000",
+    //   connectorHover: "#0c0"
+    // };
+    // var e1 = this.graph.addElement(this.personTemplate, { x: 250, y: 50 }, "Michael Scott",{});
+    // var e2 = this.graph.addElement(this.personTemplate, { x: 150, y: 150 }, "Angela Martin",{});
+    // var e3 = this.graph.addElement(this.personTemplate, { x: 350, y: 150 }, "Dwight Schrute",{});
+    // var e4 = this.graph.addElement(this.personTemplate, { x: 50, y: 250 }, "Kevin Malone",{});
+    // var e5 = this.graph.addElement(this.personTemplate, { x: 250, y: 250 }, "Oscar Martinez",{});
+    // this.graph.addConnection(e1.getConnector("reports"), e2.getConnector("manager"));
+    // this.graph.addConnection(e1.getConnector("reports"), e3.getConnector("manager"));
+    // this.graph.addConnection(e2.getConnector("reports"), e4.getConnector("manager"));
+    // this.graph.addConnection(e2.getConnector("reports"), e5.getConnector("manager"));
+    // this.graph.update();
   }
 
   public personTemplate = {

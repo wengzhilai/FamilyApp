@@ -118,13 +118,13 @@ export class NetronGraph {
         return this._elements;
     }
 
-    public addElement(template: INetronElementTemplate, point: NetronPoint, content: any,object:any): NetronElement {
+    public addElement(template: INetronElementTemplate, point: NetronPoint, content: any, object: any): NetronElement {
         this._activeTemplate = template;
         let element: NetronElement = new NetronElement(template, point);
         element.content = content;
         element.insertInto(this);
         element.invalidate();
-        element.Object=object;
+        element.Object = object;
         return element;
     }
 
@@ -138,7 +138,7 @@ export class NetronGraph {
     }
 
     public addConnection(connector1: NetronConnector, connector2: NetronConnector): NetronConnection {
-        var connection: NetronConnection = new NetronConnection(connector1, connector2);
+        let connection: NetronConnection = new NetronConnection(connector1, connector2);
         connector1.connections.push(connection);
         connector2.connections.push(connection);
         connector1.invalidate();
@@ -157,13 +157,13 @@ export class NetronGraph {
     public deleteSelection() {
         this._undoService.begin();
 
-        var deletedConnections: NetronConnection[] = [];
+        let deletedConnections: NetronConnection[] = [];
         for (let i: number = 0; i < this._elements.length; i++) {
             let element: NetronElement = this._elements[i];
             for (let j: number = 0; j < element.connectors.length; j++) {
                 let connector: NetronConnector = element.connectors[j];
                 for (let k: number = 0; k < connector.connections.length; k++) {
-                    var connection: NetronConnection = connector.connections[k];
+                    let connection: NetronConnection = connector.connections[k];
                     if ((element.selected || connection.selected) && (!deletedConnections.contains(connection))) {
                         this._undoService.add(new NetronDeleteConnectionUndoUnit(connection));
                         deletedConnections.push(connection);
@@ -224,7 +224,7 @@ export class NetronGraph {
 
         if (e.button === 0) // left-click
         {
-            var point: NetronPoint = this._pointerPosition;
+            let point: NetronPoint = this._pointerPosition;
 
             this.updateActiveObject(point);
             if ((this._activeObject !== null) && (this._activeObject instanceof NetronElement)) {
@@ -259,7 +259,7 @@ export class NetronGraph {
     }
 
     private pointerDown() {
-        var point: NetronPoint = this._pointerPosition;
+        let point: NetronPoint = this._pointerPosition;
 
         if (this._newElement !== null) {
             this._undoService.begin();
@@ -289,10 +289,10 @@ export class NetronGraph {
                 }
                 else {
                     // select object
-                    var selectable: INetronSelectable = <INetronSelectable>this._activeObject;
+                    let selectable: INetronSelectable = <INetronSelectable>this._activeObject;
                     if (!selectable.selected) {
                         this._undoService.begin();
-                        var selectionUndoUnit: NetronSelectionUndoUnit = new NetronSelectionUndoUnit();
+                        let selectionUndoUnit: NetronSelectionUndoUnit = new NetronSelectionUndoUnit();
                         if (!this._shiftKey) {
                             this.deselectAll(selectionUndoUnit);
                         }
@@ -302,19 +302,19 @@ export class NetronGraph {
                     }
                     else if (this._shiftKey) {
                         this._undoService.begin();
-                        var deselectUndoUnit: NetronSelectionUndoUnit = new NetronSelectionUndoUnit();
+                        let deselectUndoUnit: NetronSelectionUndoUnit = new NetronSelectionUndoUnit();
                         deselectUndoUnit.deselect(selectable);
                         this._undoService.add(deselectUndoUnit);
                         this._undoService.commit();
                     }
 
                     // start tracking
-                    var hit = new NetronPoint(0, 0);
+                    let hit = new NetronPoint(0, 0);
                     if (this._activeObject instanceof NetronElement) {
                         let element: NetronElement = <NetronElement>this._activeObject;
                         hit = element.tracker.hitTest(point);
                     }
-                    for (var i = 0; i < this._elements.length; i++) {
+                    for (let i = 0; i < this._elements.length; i++) {
                         let element: NetronElement = this._elements[i];
                         if (element.tracker !== null) {
                             element.tracker.start(point, hit);
@@ -331,7 +331,7 @@ export class NetronGraph {
     }
 
     private pointerUp() {
-        var point: NetronPoint = this._pointerPosition;
+        let point: NetronPoint = this._pointerPosition;
 
         if (this._newConnection !== null) {
             this.updateActiveObject(point);
@@ -351,10 +351,10 @@ export class NetronGraph {
         if (this._selection !== null) {
             this._undoService.begin();
 
-            var selectionUndoUnit: NetronSelectionUndoUnit = new NetronSelectionUndoUnit();
+            let selectionUndoUnit: NetronSelectionUndoUnit = new NetronSelectionUndoUnit();
 
-            var rectangle: NetronRectangle = this._selection.rectangle;
-            var selectable: INetronSelectable = <INetronSelectable>this._activeObject;
+            let rectangle: NetronRectangle = this._selection.rectangle;
+            let selectable: INetronSelectable = <INetronSelectable>this._activeObject;
             if ((this._activeObject === null) || (!selectable.selected)) {
                 if (!this._shiftKey) {
                     this.deselectAll(selectionUndoUnit);
@@ -372,13 +372,13 @@ export class NetronGraph {
 
         if (this._track) {
             this._undoService.begin();
-            for (var i = 0; i < this._elements.length; i++) {
+            for (let i = 0; i < this._elements.length; i++) {
                 let element: NetronElement = this._elements[i];
                 if (element.tracker !== null) {
                     element.tracker.stop();
                     element.invalidate();
-                    var r1: NetronRectangle = element.rectangle;
-                    var r2: NetronRectangle = element.tracker.rectangle;
+                    let r1: NetronRectangle = element.rectangle;
+                    let r2: NetronRectangle = element.tracker.rectangle;
                     if ((r1.x != r2.x) || (r1.y != r2.y) || (r1.width != r2.width) || (r1.height != r2.height)) {
                         this._undoService.add(new NetronTransformUndoUnit(element, r1, r2));
                     }
@@ -395,7 +395,7 @@ export class NetronGraph {
     }
 
     private pointerMove() {
-        var point: NetronPoint = this._pointerPosition;
+        let point: NetronPoint = this._pointerPosition;
 
         if (this._newElement !== null) {
             // placing new element
@@ -443,14 +443,14 @@ export class NetronGraph {
         if (this._isMozilla) {
             if (typeof this._keyCodeTable === "undefined") {
                 this._keyCodeTable = [];
-                var charCodeTable: any = {
+                let charCodeTable: any = {
                     32: ' ', 48: '0', 49: '1', 50: '2', 51: '3', 52: '4', 53: '5', 54: '6', 55: '7', 56: '8', 57: '9', 59: ';', 61: '=',
                     65: 'a', 66: 'b', 67: 'c', 68: 'd', 69: 'e', 70: 'f', 71: 'g', 72: 'h', 73: 'i', 74: 'j', 75: 'k', 76: 'l', 77: 'm', 78: 'n', 79: 'o', 80: 'p', 81: 'q', 82: 'r', 83: 's', 84: 't', 85: 'u', 86: 'v', 87: 'w', 88: 'x', 89: 'y', 90: 'z',
                     107: '+', 109: '-', 110: '.', 188: ',', 190: '.', 191: '/', 192: '`', 219: '[', 220: '\\', 221: ']', 222: '\"'
                 }
 
-                for (var keyCode in charCodeTable) {
-                    var key: string = charCodeTable[keyCode];
+                for (let keyCode in charCodeTable) {
+                    let key: string = charCodeTable[keyCode];
                     this._keyCodeTable[key.charCodeAt(0)] = keyCode;
                     if (key.toUpperCase() != key) {
                         this._keyCodeTable[key.toUpperCase().charCodeAt(0)] = keyCode;
@@ -472,7 +472,7 @@ export class NetronGraph {
             if (keyCode == 65) // A - select all
             {
                 this._undoService.begin();
-                var selectionUndoUnit = new NetronSelectionUndoUnit();
+                let selectionUndoUnit = new NetronSelectionUndoUnit();
                 this.selectAll(selectionUndoUnit, null);
                 this._undoService.add(selectionUndoUnit);
                 this._undoService.commit();
@@ -517,7 +517,7 @@ export class NetronGraph {
 
             this._track = false;
             for (let i: number = 0; i < this._elements.length; i++) {
-                var element = this._elements[i];
+                let element = this._elements[i];
                 if (element.tracker !== null) {
                     element.tracker.stop();
                 }
@@ -545,7 +545,7 @@ export class NetronGraph {
             for (let j: number = 0; j < element.connectors.length; j++) {
                 let connector: NetronConnector = element.connectors[j];
                 for (let k: number = 0; k < connector.connections.length; k++) {
-                    var connection: NetronConnection = connector.connections[k];
+                    let connection: NetronConnection = connector.connections[k];
                     if ((rectangle === null) || (connection.hitTest(rectangle))) {
                         selectionUndoUnit.select(connection);
                     }
@@ -562,7 +562,7 @@ export class NetronGraph {
             for (let j: number = 0; j < element.connectors.length; j++) {
                 let connector: NetronConnector = element.connectors[j];
                 for (let k: number = 0; k < connector.connections.length; k++) {
-                    var connection: NetronConnection = connector.connections[k];
+                    let connection: NetronConnection = connector.connections[k];
                     selectionUndoUnit.deselect(connection);
                 }
             }
@@ -570,7 +570,7 @@ export class NetronGraph {
     }
 
     private updateActiveObject(point: NetronPoint) {
-        var hitObject: INetronHoverable = this.hitTest(point);
+        let hitObject: INetronHoverable = this.hitTest(point);
         if (hitObject != this._activeObject) {
             if (this._activeObject !== null) {
                 this._activeObject.hover = false;
@@ -585,7 +585,7 @@ export class NetronGraph {
     }
 
     private hitTest(point: NetronPoint): INetronHoverable {
-        var rectangle: NetronRectangle = new NetronRectangle(point.x, point.y, 0, 0);
+        let rectangle: NetronRectangle = new NetronRectangle(point.x, point.y, 0, 0);
 
         for (let i: number = 0; i < this._elements.length; i++) {
             let element: NetronElement = this._elements[i];
@@ -609,7 +609,7 @@ export class NetronGraph {
             for (let j: number = 0; j < element.connectors.length; j++) {
                 let connector: NetronConnector = element.connectors[j];
                 for (let k: number = 0; k < connector.connections.length; k++) {
-                    var connection: NetronConnection = connector.connections[k];
+                    let connection: NetronConnection = connector.connections[k];
                     if (connection.hitTest(rectangle)) {
                         return connection;
                     }
@@ -632,7 +632,7 @@ export class NetronGraph {
     private updateMousePosition(e: MouseEvent) {
         this._shiftKey = e.shiftKey;
         this._pointerPosition = new NetronPoint(e.pageX, e.pageY);
-        var node: HTMLElement = this._canvas;
+        let node: HTMLElement = this._canvas;
         while (node !== null) {
             this._pointerPosition.x -= node.offsetLeft;
             this._pointerPosition.y -= node.offsetTop;
@@ -643,34 +643,34 @@ export class NetronGraph {
     private updateTouchPosition(e: TouchEvent) {
         this._shiftKey = false;
         this._pointerPosition = new NetronPoint(e.touches[0].pageX, e.touches[0].pageY);
-        var node: HTMLElement = this._canvas;
+        let node: HTMLElement = this._canvas;
         while (node !== null) {
             this._pointerPosition.x -= node.offsetLeft;
             this._pointerPosition.y -= node.offsetTop;
             node = <HTMLElement>node.offsetParent;
         }
     }
-    public Clear(){
+    public Clear() {
         // this._canvas.style.background = this.theme.background;
         // this._context.clearRect(0, 0, this._canvas.width, this._canvas.height);
         // console.log(this._context)
         this._context.restore()
         // this._canvas.remove()
         //console.log(this._canvas.remove())
-        
+
     }
     public update() {
         this._canvas.style.background = this.theme.background;
         this._context.clearRect(0, 0, this._canvas.width, this._canvas.height);
 
-        var connections: NetronConnection[] = [];
-        for (var i = 0; i < this._elements.length; i++) {
+        let connections: NetronConnection[] = [];
+        for (let i = 0; i < this._elements.length; i++) {
             let element: NetronElement = this._elements[i];
-            for (var j = 0; j < element.connectors.length; j++) {
+            for (let j = 0; j < element.connectors.length; j++) {
                 let connector: NetronConnector = element.connectors[j];
-                for (var k = 0; k < connector.connections.length; k++) {
-                    var connection: NetronConnection = connector.connections[k];
-                    if (!connections.contains(connection)) {
+                for (let k = 0; k < connector.connections.length; k++) {
+                    let connection: NetronConnection = connector.connections[k];
+                    if (connections.indexOf(connection)==-1) {
                         connection.paint(this._context);
                         connections.push(connection);
                     }
@@ -689,7 +689,7 @@ export class NetronGraph {
             for (let j: number = 0; j < element.connectors.length; j++) {
                 let connector: NetronConnector = element.connectors[j];
 
-                var hover: boolean = false;
+                let hover: boolean = false;
                 for (let k: number = 0; k < connector.connections.length; k++) {
                     if (connector.connections[k].hover) {
                         hover = true;
