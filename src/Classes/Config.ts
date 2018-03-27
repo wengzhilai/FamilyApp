@@ -141,7 +141,7 @@ export class Config {
     {
       text:"tabs.Index2",
       Icon:"keypad",
-      root:"FloorPlanPage"
+      root:"FamilyRelativePage"
     },
     {
       text:"tabs.Index3",
