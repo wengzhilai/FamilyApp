@@ -20,6 +20,7 @@ export class HomeIndexPage implements OnInit {
   public graph: NetronGraph = null;
   public user: any;
   public userRelative: any;
+  public AllItem: Array<any> = [];
   constructor(
     public navCtrl: NavController,
     public commonService: CommonService,
@@ -47,18 +48,32 @@ export class HomeIndexPage implements OnInit {
           connectorHoverBorder: "#000",
           connectorHover: "#0c0"
         };
-        let tt:any={}
         for (let i = 0; i < this.userRelative.ItemList.length; i++) {
           let item = this.userRelative.ItemList[i];
-          // tt.set["e"+item.ID]=item.ID
-          tt["e"+item.ID] = this.graph.addElement(this.personTemplate, { x: item.x * 50 + 100, y: item.y * 100 + 100 }, item.Name, item);
+          this.AllItem.push({
+            "K": item.Id,
+            V: this.graph.addElement(this.personTemplate, { x: item.x * 20 + 20, y: item.y * 100 + 20 }, item.Name, item)
+          })
         }
+        console.log(112)
         this.userRelative.RelativeList.forEach(element => {
-          this.graph.addConnection(tt["e"+element.K].getConnector("reports"), tt["e"+element.V].getConnector("manager"));
+          this.CreateConnect(element.V,element.K)
         });
-        console.log(tt)
+        this.graph.update();
       }
     })
+  }
+
+  CreateConnect(startId, endId) {
+    let startObj = null
+    let endObj = null
+    this.AllItem.forEach(element => {
+      if (element.K == startId) startObj = element.V
+      if (element.K == endId) endObj = element.V
+    });
+    if (startObj != null && endObj != null) {
+      this.graph.addConnection(startObj.getConnector("reports"), endObj.getConnector("manager"));
+    }
   }
 
   ngOnInit() {
@@ -71,35 +86,37 @@ export class HomeIndexPage implements OnInit {
     }
   }
 
+  /**
+   * 用于测试
+   */
   test() {
-    // this.graph = new NetronGraph(this.mapElement.nativeElement);
-    
-    // this.graph.theme = {
-    //   background: "#fafafa",
-    //   connection: "#000",
-    //   selection: "#888",
-    //   connector: "#777",
-    //   connectorBorder: "#000",
-    //   connectorHoverBorder: "#000",
-    //   connectorHover: "#0c0"
-    // };
-    // var e1 = this.graph.addElement(this.personTemplate, { x: 250, y: 50 }, "Michael Scott",{});
-    // var e2 = this.graph.addElement(this.personTemplate, { x: 150, y: 150 }, "Angela Martin",{});
-    // var e3 = this.graph.addElement(this.personTemplate, { x: 350, y: 150 }, "Dwight Schrute",{});
-    // var e4 = this.graph.addElement(this.personTemplate, { x: 50, y: 250 }, "Kevin Malone",{});
-    // var e5 = this.graph.addElement(this.personTemplate, { x: 250, y: 250 }, "Oscar Martinez",{});
-    // this.graph.addConnection(e1.getConnector("reports"), e2.getConnector("manager"));
-    // this.graph.addConnection(e1.getConnector("reports"), e3.getConnector("manager"));
-    // this.graph.addConnection(e2.getConnector("reports"), e4.getConnector("manager"));
-    // this.graph.addConnection(e2.getConnector("reports"), e5.getConnector("manager"));
-    // this.graph.update();
+    this.graph = new NetronGraph(this.mapElement.nativeElement);
+    this.graph.theme = {
+      background: "#fafafa",
+      connection: "#000",
+      selection: "#888",
+      connector: "#777",
+      connectorBorder: "#000",
+      connectorHoverBorder: "#000",
+      connectorHover: "#0c0"
+    };
+    var e1 = this.graph.addElement(this.personTemplate, { x: 250, y: 50 }, "Michael Scott",{});
+    var e2 = this.graph.addElement(this.personTemplate, { x: 150, y: 150 }, "Angela Martin",{});
+    var e3 = this.graph.addElement(this.personTemplate, { x: 350, y: 150 }, "Dwight Schrute",{});
+    var e4 = this.graph.addElement(this.personTemplate, { x: 50, y: 250 }, "Kevin Malone",{});
+    var e5 = this.graph.addElement(this.personTemplate, { x: 250, y: 250 }, "Oscar Martinez",{});
+    this.graph.addConnection(e1.getConnector("reports"), e2.getConnector("manager"));
+    this.graph.addConnection(e1.getConnector("reports"), e3.getConnector("manager"));
+    this.graph.addConnection(e2.getConnector("reports"), e4.getConnector("manager"));
+    this.graph.addConnection(e2.getConnector("reports"), e5.getConnector("manager"));
+    this.graph.update();
   }
 
   public personTemplate = {
     resizable: false,
     defaultWidth: 20,
     defaultHeight: 80,
-    defaultContent: "asdfasdfag",
+    defaultContent: "",
     connectorTemplates: [
       {
         name: "manager",
@@ -134,7 +151,7 @@ export class HomeIndexPage implements OnInit {
       context.lineWidth = element.selected ? 2 : 1;
       context.fillRect(rectangle.x, rectangle.y, rectangle.width, rectangle.height);
       context.strokeRect(rectangle.x, rectangle.y, rectangle.width, rectangle.height);
-      context.font = "10px Verdana";
+      context.font = "12px Verdana";
       context.fillStyle = context.strokeStyle;
       context.textBaseline = "bottom";
       context.textAlign = "center";
@@ -143,10 +160,12 @@ export class HomeIndexPage implements OnInit {
       }
     },
     edit: (element: NetronElement, context, point: any) => {
+      console.log(element.Object)
       this.fab._mainButton.getElementRef().nativeElement.parentNode.style.display = ""
       this.fab._mainButton.getElementRef().nativeElement.parentNode.style.left = (element.rectangle.x - 15) + "px"
       this.fab._mainButton.getElementRef().nativeElement.parentNode.style.top = (element.rectangle.y + 15) + "px"
       this.fab.toggleList();
+      
       // console.log(point)
       // console.log(this.fab)
       // this.fab._mainButton.getElementRef().nativeElement.parentNode.style.left = 

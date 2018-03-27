@@ -78,7 +78,7 @@ import { NetronConnection } from "./Connection";
             }
 
             var t1: string[] = this._template.type.split(' ');
-            if (!t1.contains("[array]") && (this._connections.length == 1))
+            if (t1.indexOf("[array]")==-1 && (this._connections.length == 1))
             {
                 return false;
             }

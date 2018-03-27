@@ -5,31 +5,40 @@
 </ion-header>
 
 <ion-content>
-<div class="center" style="position: relative;">
-  <canvas #canvas style="position:absolute; width:800px; height:600px; border-radius: 3px; border: 1px solid rgba(0, 0, 0, .09); box-shadow: 0 1px 4px 0 rgba(0, 0, 0, .04); outline: none; " tabindex="0"></canvas>
-</div>
-
-<ion-fab #fab style="display: none;" >
-  <div style="width:60px;height:50px" (click)="fab.toggleList()">
+  <div class="center" style="position: relative;">
+    <canvas #canvas style="position:absolute; width:800px; height:600px; border-radius: 3px; border: 1px solid rgba(0, 0, 0, .09); box-shadow: 0 1px 4px 0 rgba(0, 0, 0, .04); outline: none; "
+      tabindex="0"></canvas>
   </div>
+
+  <ion-fab #fab style="display: none;">
+    <div style="width:60px;height:50px" (click)="fab.toggleList()">
+    </div>
     <button ion-fab mini style="display: none;">翁志来</button>
     <ion-fab-list side="top">
-      <span >添加父亲</span>
-      <button ion-fab  color="car"><ion-icon name="person-add"></ion-icon></button>
+      <span>添加父亲</span>
+      <button ion-fab color="car">
+        <ion-icon name="person-add"></ion-icon>
+      </button>
     </ion-fab-list>
     <ion-fab-list side="bottom">
-      <button ion-fab  color="primary"><ion-icon name="people"></ion-icon></button>
+      <button ion-fab color="primary">
+        <ion-icon name="people"></ion-icon>
+      </button>
       <span>添加子女</span>
     </ion-fab-list>
     <ion-fab-list side="left">
       <div>
-        <button ion-fab  color="primary"><ion-icon name="at"></ion-icon></button>
+        <button ion-fab color="primary">
+          <ion-icon name="at"></ion-icon>
+        </button>
         <span>查看详细</span>
       </div>
     </ion-fab-list>
     <ion-fab-list side="right">
       <div>
-        <button ion-fab  color="car"><ion-icon name="git-network"></ion-icon></button>
+        <button ion-fab color="car">
+          <ion-icon name="git-network"></ion-icon>
+        </button>
         <span>查看关系</span>
       </div>
     </ion-fab-list>
