@@ -163,13 +163,13 @@ export class FamilyRelativePage implements OnInit  {
         context.fillText(element.content[i], rectangle.x + (rectangle.width / 2), rectangle.y + 20 + (20 * i));
       }
     },
-    edit: (element: NetronElement, context, point: any) => {
+    edit: (element: NetronElement, context, point: any) => { //点击事件
       this.tempCheckUser = element.Object;
 
       this.fab._mainButton.getElementRef().nativeElement.parentNode.style.display = ""
-      this.fab._mainButton.getElementRef().nativeElement.parentNode.style.left = (element.rectangle.x - 15) + "px"
-      this.fab._mainButton.getElementRef().nativeElement.parentNode.style.top = (element.rectangle.y + 15) + "px"
-      this.fab.toggleList();
+      // this.fab._mainButton.getElementRef().nativeElement.parentNode.style.left = (element.rectangle.x - 15) + "px"
+      // this.fab._mainButton.getElementRef().nativeElement.parentNode.style.top = (element.rectangle.y + 15) + "px"
+      // this.fab.toggleList();
     }
   }
 

@@ -6,42 +6,44 @@
 
 
 <ion-content>
-
+  <ion-fab #fab bottom right style="display: none;">
+    <button ion-fab>操作</button>
+    <ion-fab-list side="top" style="margin-left: -90px;">
+      <button ion-button icon-end color="primary" (click)="AddSon()">
+        <ion-icon name="people"></ion-icon>
+        <span class="fabTitle">添加子女</span>
+      </button>
+      <button ion-button icon-end color="primary" (click)="AddAllSon()">
+        <ion-icon name="people"></ion-icon>
+        <span class="fabTitle">添加多个</span>
+      </button>
+      <button ion-button icon-end color="primary" (click)="EditFather()">
+        <ion-icon name="person-add"></ion-icon>
+        <span class="fabTitle">添加父亲</span>
+      </button>
+      <button ion-button icon-end color="primary" (click)="DeleteUserInfo()">
+        <ion-icon name="trash"></ion-icon>
+        <span class="fabTitle">删除用户</span>
+      </button>
+    </ion-fab-list>
+    <ion-fab-list side="left">
+      <button ion-button icon-end color="primary" (click)="LookRelative()">
+        <ion-icon name="git-network"></ion-icon>
+        <span class="fabTitle">查看关系</span>
+      </button>
+      <button ion-button icon-end color="primary" (click)="EditUserInfo()">
+        <ion-icon name="at"></ion-icon>
+        <span class="fabTitle">查看详细</span>
+      </button>
+    </ion-fab-list>
+  </ion-fab>
   <div class="center" class="canvasDiv">
     <canvas #canvas tabindex="0"></canvas>
-    <ion-fab #fab style="display: none;">
-      <div style="width:60px;height:50px" (click)="fab.toggleList()">
-      </div>
-      <button ion-fab mini style="display: none;">翁志来</button>
-      <ion-fab-list side="top">
-        <span class="fabTitle">添加父亲</span>
-        <button ion-fab color="primary" (click)="EditFather()"><ion-icon name="person-add"></ion-icon></button>
-      </ion-fab-list>
-      <ion-fab-list side="bottom">
-        <button ion-fab color="primary" (click)="AddSon()"><ion-icon name="people"></ion-icon></button>
-        <span class="fabTitle">添加子女</span>
-        <button ion-fab color="primary" (click)="AddAllSon()"><ion-icon name="people"></ion-icon></button>
-        <span class="fabTitle">添加多个</span>
-      </ion-fab-list>
-      <ion-fab-list side="left">
-        <div class="fabSpanDiv">
-          <button ion-fab color="primary" (click)="EditUserInfo()"><ion-icon name="at"></ion-icon></button>
-          <span class="fabTitle">查看详细</span>
-          <button ion-fab color="primary" (click)="DeleteUserInfo()"><ion-icon name="trash"></ion-icon></button>
-          <span class="fabTitle">删除用户</span>
-        </div>
-      </ion-fab-list>
-      <ion-fab-list side="right">
-        <div class="fabSpanDiv">
-          <button ion-fab color="primary" (click)="LookRelative()"><ion-icon name="git-network"></ion-icon></button>
-          <span class="fabTitle">查看关系</span>
-        </div>
-      </ion-fab-list>
-    </ion-fab>
+
   </div>
   <div style="position:absolute;width:100%">
-    <ion-searchbar placeholder="输入关键字" [(ngModel)]="userName" debounce="1000" cancelButtonText="取消" (ionCancel)="CancelKey($event)" (ionClear)="CancelKey($event)"
-      showCancelButton color="danger" (ionInput)="filterItems($event)"></ion-searchbar>
+    <ion-searchbar placeholder="输入关键字" [(ngModel)]="userName" debounce="1000" cancelButtonText="取消" (ionCancel)="CancelKey($event)"
+      (ionClear)="CancelKey($event)" showCancelButton color="danger" (ionInput)="filterItems($event)"></ion-searchbar>
     <ion-list>
       <ion-item *ngFor="let item of userInfoList" (click)="SelectUser(item)">
         {{ item.NAME }}
