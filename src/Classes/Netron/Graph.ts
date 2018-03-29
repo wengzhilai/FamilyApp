@@ -48,7 +48,10 @@ export class NetronGraph {
     private _keyDownHandler: (e: KeyboardEvent) => void;
     private _keyPressHandler: (e: KeyboardEvent) => void;
     private _keyUpHandler: (e: KeyboardEvent) => void;
-
+    /**
+     * 点击空白处事件
+     */
+    public ClickBlack
     constructor(element: HTMLCanvasElement) {
         this._canvas = element;
         this._canvas.width = this._canvas.clientWidth * this.devicePixelRatio;
@@ -260,7 +263,6 @@ export class NetronGraph {
 
     private pointerDown() {
         let point: NetronPoint = this._pointerPosition;
-
         if (this._newElement !== null) {
             this._undoService.begin();
             this._newElement.invalidate();
@@ -272,10 +274,14 @@ export class NetronGraph {
         }
         else {
             this._selection = null;
+            
             this.updateActiveObject(point);
             if (this._activeObject === null) {
-                // start selection
+                // 点的空白处
                 this._selection = new NetronSelection(point);
+                if(this.ClickBlack!=null){
+                    this.ClickBlack()
+                }
             }
             else {
                 // start connection

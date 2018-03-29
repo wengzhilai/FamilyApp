@@ -90,7 +90,7 @@ export class FamilyEditFatherPage {
     switch (this.params.get("optype")) {
       case "EditFather":
         this.title = "添加[" + this.params.get("userName") + "]的父亲";
-        this.toPostService.Single("Family/UserInfoFatherSingle", this.params.get("userId"), (currMsg) => {
+        this.toPostService.Single("UserInfo/Single", {"Key":this.params.get("userId")}, (currMsg) => {
           if (currMsg.IsError) {
             this.commonService.hint(currMsg.Message)
             this.navCtrl.pop();
@@ -109,17 +109,17 @@ export class FamilyEditFatherPage {
         break;
       case "edit":
         this.bean.ID = this.params.get("userId")
-        this.toPostService.Single("Family/UserInfoSingle", this.bean.ID, (currMsg) => {
+        this.toPostService.Post("UserInfo/Single", {"Key":this.bean.ID}, (currMsg) => {
           if (currMsg.IsError) {
             this.commonService.hint(currMsg.Message)
             this.navCtrl.pop();
           }
           else {
-            this.bean = currMsg;
+            this.bean = currMsg.Date;
             // this.bean.DIED_TIME = new Date(this.bean.DIED_TIME).toISOString();
             // this.bean.BIRTHDAY_TIME = new Date(this.bean.BIRTHDAY_TIME).toISOString();
             setTimeout(()=> {
-              this.PubicToChina(this.bean.DIED_TIME,"DiedTimeChinese");
+              // this.PubicToChina(this.bean.DIED_TIME,"DiedTimeChinese");
             }, 500);
             console.log(this.bean)
             this.SetForm(this.bean);
@@ -335,12 +335,12 @@ export class FamilyEditFatherPage {
       else {
         switch (outDateType) {
           case "BIRTHDAY_TIME":
-            var str = currMsg.Message + inDate.substr(inDate.indexOf('T'));
+            let str = currMsg.Message + inDate.substr(inDate.indexOf('T'));
             this.loadTimeBirthday = new Date();
             this.bean.BIRTHDAY_TIME = str;
             break;
           case "DIED_TIME":
-            var str = currMsg.Message + inDate.substr(inDate.indexOf('T'));
+            str = currMsg.Message + inDate.substr(inDate.indexOf('T'));
             this.loadTimeDied = new Date();
             this.bean.DIED_TIME = str;
             break;
@@ -374,7 +374,7 @@ export class FamilyEditFatherPage {
             this.bean.BirthdayTimeChinese = str;
             break;
           case "DiedTimeChinese":
-            var str = currMsg.Message + inDate.substr(inDate.indexOf('T'));
+            str = currMsg.Message + inDate.substr(inDate.indexOf('T'));
             this.loadTimeDied = new Date();
             this.bean.DiedTimeChinese = str;
             break;

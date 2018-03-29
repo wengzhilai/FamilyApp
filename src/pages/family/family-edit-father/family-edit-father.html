@@ -17,7 +17,7 @@
           <ion-item-divider color="light">基础资料</ion-item-divider>
           <ion-item class="thumbnailMy">
               <ion-thumbnail item-left>
-                  <img src="../../../assets/img/man_pic.png" src="{{bean.iconURL|ImgUrl}}" (click)="upImg('iconURL')">
+                  <img src="{{bean.iconURL|ImgUrl}}" (click)="upImg('iconURL')">
               </ion-thumbnail>
               <h2>{{userFormMsg.firstName.aliasName}}：<input formControlName="firstName" /></h2>
               <h2>{{userFormMsg.lastName.aliasName}}：<input formControlName="lastName" /></h2>

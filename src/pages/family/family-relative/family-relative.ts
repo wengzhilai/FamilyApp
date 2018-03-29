@@ -1,6 +1,6 @@
 
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
-import { IonicPage, NavController, App, FabContainer,AlertController } from 'ionic-angular';
+import { IonicPage, NavController, App, FabContainer, AlertController } from 'ionic-angular';
 
 import { NetronGraph } from '../../../Classes/Netron/Graph';
 import { NetronElement } from "../../../Classes/Netron/Element";
@@ -18,7 +18,7 @@ import { Dictionary } from "../../../Classes/Dictionary";
   selector: 'page-family-relative',
   templateUrl: 'family-relative.html',
 })
-export class FamilyRelativePage implements OnInit  {
+export class FamilyRelativePage implements OnInit {
   @ViewChild('canvas') mapElement: ElementRef;
   @ViewChild('fab') fab: FabContainer;
   public graph: NetronGraph = null;
@@ -35,19 +35,13 @@ export class FamilyRelativePage implements OnInit  {
     private alertCtrl: AlertController,
     public toPostService: ToPostService
   ) {
-    this.onSucc(1);
+    this.onSucc();
   }
   ngOnInit() {
     this.graph = new NetronGraph(this.mapElement.nativeElement);
-    this.graph.theme = {
-      background: "#fafafa",
-      connection: "#000",
-      selection: "#888",
-      connector: "#777",
-      connectorBorder: "#000",
-      connectorHoverBorder: "#000",
-      connectorHover: "#0c0"
-    };
+    this.graph.ClickBlack=(x)=>{
+      this.fab._mainButton.getElementRef().nativeElement.parentNode.style.display = "none"
+    }
   }
 
   CancelKey(ev: any) {
@@ -82,10 +76,11 @@ export class FamilyRelativePage implements OnInit  {
       this.userInfoList = [];
     }
   }
-  onSucc(postUserId) {
+  onSucc(postUserId=null) {
 
     this.userId = postUserId;
-    this.toPostService.Single("Family/UserInfoRelative", postUserId, (currMsg) => {
+    
+    this.toPostService.Post("Family/UserInfoRelative", {Key:postUserId}, (currMsg) => {
       if (!currMsg.IsSuccess) {
         this.commonService.hint(currMsg.Msg);
       } else {
@@ -143,7 +138,7 @@ export class FamilyRelativePage implements OnInit  {
       var rectangle = element.rectangle;
       rectangle.x += context.canvas.offsetLeft;
       rectangle.y += context.canvas.offsetTop;
-
+      //表示是自己
       if (element.Object.Id == this.userId) {
         context.fillStyle = "#c8d4e8";
         context.strokeStyle = element.selected ? "#666" : "#F00";
@@ -152,10 +147,17 @@ export class FamilyRelativePage implements OnInit  {
         context.fillStyle = "#fff";
         context.strokeStyle = element.selected ? "#444" : "#000";
       }
-      context.lineWidth = element.selected ? 2 : 1;
+      if (element.selected) {
+        context.lineWidth = 5
+      }
+      else {
+        context.lineWidth = 1
+      }
+      //画背景色
       context.fillRect(rectangle.x, rectangle.y, rectangle.width, rectangle.height);
+      //画边框
       context.strokeRect(rectangle.x, rectangle.y, rectangle.width, rectangle.height);
-      context.font = "10px Verdana";
+      context.font = "12px Verdana";
       context.fillStyle = context.strokeStyle;
       context.textBaseline = "bottom";
       context.textAlign = "center";
@@ -165,56 +167,10 @@ export class FamilyRelativePage implements OnInit  {
     },
     edit: (element: NetronElement, context, point: any) => { //点击事件
       this.tempCheckUser = element.Object;
-
       this.fab._mainButton.getElementRef().nativeElement.parentNode.style.display = ""
-      // this.fab._mainButton.getElementRef().nativeElement.parentNode.style.left = (element.rectangle.x - 15) + "px"
-      // this.fab._mainButton.getElementRef().nativeElement.parentNode.style.top = (element.rectangle.y + 15) + "px"
-      // this.fab.toggleList();
     }
   }
 
-  public contentEditor = {
-    input: null,
-    start: function (element, context) {
-      this.element = element;
-      this.canvas = context.canvas;
-
-      var rectangle = element.rectangle;
-      rectangle.x += this.canvas.offsetLeft;
-      rectangle.y += this.canvas.offsetTop;
-
-      this.input = document.createElement('input');
-      this.input.type = "text";
-      this.input.style.position = "absolute";
-      this.input.style.zIndex = 1;
-      this.input.style.top = (rectangle.y + 8) + "px";
-      this.input.style.left = (rectangle.x + 2) + "px";
-      this.input.style.width = (rectangle.width - 5) + "px";
-      this.input.onblur = function (e) {
-        this.commit();
-      }
-      this.input.onkeydown = function (e) {
-        if (e.keyCode == 13) { this.commit(); } // Enter
-        if (e.keyCode == 27) { this.cancel(); } // ESC
-      };
-      this.canvas.parentNode.appendChild(this.input);
-      this.input.value = element.content;
-      this.input.select();
-      this.input.focus();
-    },
-    commit: function () {
-      this.element.setContent(this.input.value);
-      this.cancel();
-    },
-    cancel: function () {
-      if (this.input !== null) {
-        var input = this.input;
-        this.input = null;
-        this.canvas.parentNode.removeChild(input);
-        this.canvas = null;
-      }
-    }
-  }
   EditFather() {
     this.userName = this.tempCheckUser.Name;
     this.userId = this.tempCheckUser.Id;
@@ -280,6 +236,7 @@ export class FamilyRelativePage implements OnInit  {
     });
     alert.present();
   }
+
   EditUserInfo() {
     this.userName = this.tempCheckUser.Name;
     this.userId = this.tempCheckUser.Id;
@@ -294,7 +251,7 @@ export class FamilyRelativePage implements OnInit  {
   DeleteUserInfo() {
     let alert = this.alertCtrl.create({
       title: '删除用户',
-      message: '确定要删除该用户['+this.tempCheckUser.Name+']吗',
+      message: '确定要删除该用户[' + this.tempCheckUser.Name + ']吗',
       buttons: [
         {
           text: '取消',
@@ -307,15 +264,16 @@ export class FamilyRelativePage implements OnInit  {
           text: '删除',
           handler: data => {
             var postBean = {
-              authToken: AppGlobal.GetToken(),
-              id: this.tempCheckUser.Id
+              Key: this.tempCheckUser.Id
             };
-            this.toPostService.Post("UserInfo/UserInfoDelete", postBean, (currMsg) => {
-              if (currMsg.IsError) {
-                this.commonService.hint(currMsg.Message);
-              } else {
+            this.toPostService.Post("UserInfo/Delete", postBean, (currMsg) => {
+              if (currMsg.IsSuccess) {
                 this.commonService.hint('删除成功');
+                this.tempCheckUser.Name=""
+                this.tempCheckUser.Id=""
                 this.LookRelative()
+              } else {
+                this.commonService.hint(currMsg.Msg);
               }
             })
           }
@@ -325,37 +283,15 @@ export class FamilyRelativePage implements OnInit  {
     alert.present();
   }
   LookRelative() {
-    this.fab._mainButton.getElementRef().nativeElement.parentNode.style.left = (-15) + "px"
-    this.fab._mainButton.getElementRef().nativeElement.parentNode.style.top = (-15) + "px"
-
     this.userName = this.tempCheckUser.Name;
     this.userId = this.tempCheckUser.Id;
-    this.fab.toggleList();
     this.graph.dispose();
     this.graph = new NetronGraph(this.mapElement.nativeElement);
-    this.graph.theme = {
-      background: "#fafafa",
-      connection: "#000",
-      selection: "#888",
-      connector: "#777",
-      connectorBorder: "#000",
-      connectorHoverBorder: "#000",
-      connectorHover: "#0c0"
-    };
     this.onSucc(this.userId);
   }
   SelectUser(userInfo: any) {
     this.graph.dispose();
     this.graph = new NetronGraph(this.mapElement.nativeElement);
-    this.graph.theme = {
-      background: "#fafafa",
-      connection: "#000",
-      selection: "#888",
-      connector: "#777",
-      connectorBorder: "#000",
-      connectorHoverBorder: "#000",
-      connectorHover: "#0c0"
-    };
 
     this.CancelKey(null);
     this.onSucc(userInfo.ID)
