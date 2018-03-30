@@ -133,7 +133,7 @@ export class Config {
     {
       text:"tabs.Index1",
       Icon:"home",
-      root:"HomeIndexPage",
+      root:"FamilyRelativePage",
       children:[
         
     ]

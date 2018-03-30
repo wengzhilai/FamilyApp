@@ -323,18 +323,26 @@ export class CommonService {
     for (const field in userForm.value) {
       const control = userForm.get(field);
       if (!control.valid) {
+        // 默认名称为字段
         let keyName = field;
+        // 错误的信息
         let keyMesg = "";
+
+        if (typeof (validationMessages) == "object") {
+          //是否配置了中文名称
+          if (validationMessages[field]['aliasName'] != null) {
+            keyName = validationMessages[field]['aliasName'];
+          }
+        }
+        else if (typeof (validationMessages) == "string") {
+          keyName = this.LanguageStr(validationMessages + "." + field)
+        }
+
         //所有错误
         for (const key in control.errors) {
-          const messages = validationMessages[field];
           //判断是否有配置
-          if (messages != null) {
-            //是否配置了中文名称
-            if (messages['aliasName'] != null) {
-              keyName = messages['aliasName'];
-            }
-
+          if (typeof (validationMessages) == "object") {
+            const messages = validationMessages[field];            
             //是否配置了错误信息
             if (messages[key] != null) {
               keyMesg += messages[key];
@@ -343,7 +351,7 @@ export class CommonService {
               if (defautMsg[key] != null) {
                 keyMesg += defautMsg[key](control.errors[key]);
               }
-              else {
+              else{
                 keyMesg += key;
               }
             }
@@ -352,10 +360,12 @@ export class CommonService {
             if (defautMsg[key] != null) {
               keyMesg += defautMsg[key](control.errors[key]);
             }
-            else {
+            else{
               keyMesg += key;
             }
           }
+
+          
         }
         formErrors[keyName] = keyMesg;
       }

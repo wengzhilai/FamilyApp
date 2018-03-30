@@ -241,7 +241,7 @@ export class FamilyRelativePage implements OnInit {
     this.userName = this.tempCheckUser.Name;
     this.userId = this.tempCheckUser.Id;
     this.fab.toggleList();
-    this.navCtrl.push("FamilyEditFatherPage",
+    this.navCtrl.push("FamilyEditPage",
       {
         optype: "edit",
         userId: this.userId,
