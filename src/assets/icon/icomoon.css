@@ -47,3 +47,15 @@
 .ion-ios-icomoon-Stock:before {
     content: "\e904";
 }
+.ion-ios-icomoon-korder-ing:before {
+    content: "\e905";
+}
+.ion-ios-icomoon-order-will:before {
+    content: "\e906";
+}
+.ion-ios-icomoon-order-not:before {
+    content: "\e907";
+}
+.ion-ios-icomoon-order-ed:before {
+    content: "\e908";
+}

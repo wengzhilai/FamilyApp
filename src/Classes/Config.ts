@@ -133,9 +133,70 @@ export class Config {
     {
       text:"tabs.Index1",
       Icon:"home",
-      root:"FamilyRelativePage",
+      root:"HomeIndexPage",
       children:[
-        
+        {
+          text:"tabs.Index2",
+          Icon:"keypad",
+          root:"1"
+        },
+        {
+          text:"tabs.Index3",
+          Icon:"icomoon-unit",
+          root:"2"
+        },
+        {
+          text:"tabs.Index4",
+          Icon:"icomoon-pie",
+          root:"3"
+        },
+        {
+          text:"home.Todo",
+          Icon:"alarm",
+          root:"TodoPropertyListPage",
+          badge:"witeNum"
+        },
+        {
+          text:"home.ContractExtHandleNum",
+          Icon:"bookmarks",
+          root:"ContractExtVerificationPage",
+          badge:"ContractExtHandleNum"
+        },
+        {
+          text:"home.ContractParkHandleNum",
+          Icon:"car",
+          root:"ContractExtParkPage",
+          badge:"ContractParkHandleNum"
+        },
+        {
+          text:"home.contract",
+          Icon:"icomoon-contract",
+          root:"ContractListPage"
+        },
+        {
+          text:"home.Utilities",
+          Icon:"umbrella",
+          root:"UtilitiesListPage"
+        }
+        ,
+        {
+          text:"home.Negotiate",
+          Icon:"contacts",
+          root:"NegotiateListPage"
+        }
+        ,
+        {
+          text:"home.AssetList",
+          Icon:"cash",
+          root:"AssetListPage",
+          power:"7"
+        },
+        {
+          text:"home.Stock",
+          Icon:"icomoon-Stock",
+          root:"StockListPage",
+          power:"7"
+        }
     ]
     },
     {

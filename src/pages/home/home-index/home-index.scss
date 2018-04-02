@@ -1,16 +1,28 @@
 page-home-index {
-    .transparent{
-        color: transparent;
-        background-color: transparent;
+    .moduleIco ion-row {
+        margin: 0px 0px;
+        ion-col {
+            flex-grow: 0;
+            min-width: 90px;
+            height: 110px;
+            button {
+                display: flex;
+                flex-flow: column;
+                align-items: center;
+                background-color: transparent;
+                ion-icon {
+                    font-size: 30px;
+                    margin: 5px;
+                    // background-color: red;
+                    color: white;
+                    border-radius: 30px;
+                    width: 60px;
+                    height: 60px;
+                    line-height: 60px;
+                }
+            }
+        }
     }
-    
-    body { background-color: #fff; margin-left: 0; margin-right: 0; margin-top: 0; }
-    .center { margin-left: auto; margin-right: auto; width: 800px; }
-    input[type="text"] { text-align: center; border: none; background: #fff; color: #000; font-family: Verdana; font-size: 10px; font-weight: bold; outline: none; }
-    input[type="button"] { border: 1px solid #aaa; background: #aaa; color: #222; font-family: Verdana; font-size: 10px; font-weight: bold; outline: none; }
-    input[type="button"]:hover { border: 1px solid #bbb; background: #bbb; color: #000; cursor: pointer; }
-    input[type="button"]:active { border: 1px solid #ddd; background: #ddd; margin: 0; padding: 0; }
-    input[type="button"]::-moz-focus-inner { border: none; }
-    #canvas { border: 1px solid #444; outline: none; }
-    #canvas:focus { outline: 1px solid #666; }
+
+
 }
