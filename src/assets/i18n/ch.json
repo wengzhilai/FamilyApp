@@ -95,9 +95,10 @@
     "SEX": "性别",
     "LEVEL_ID": "排行",
     "BIRTHDAY_PLACE": "出生地点",
-    "DIED_PLACE": "逝世地点",
     "REMARK": "备注",
-    "BirthdayInfo":"出生信息"
+    "BirthdayInfo":"出生信息",
+    "DiedInfo":"逝世信息",
+    "DIED_PLACE":"逝世地点"
     
   }
 }

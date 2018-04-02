@@ -1,6 +1,7 @@
 export class YearPicker {
   public static yeasGroup: any = [
     { "name": "阳历", value: 0 },
+    { "name": "农历", value: 0 },
     { "name": "康熙", value: 1661 },
     { "name": "雍正", value: 1722 },
     { "name": "乾隆", value: 1736 },
@@ -40,6 +41,11 @@ export class YearPicker {
     }
     return this.allTianDi;
   }
+  /**
+   * 
+   * @param startYeas 年份
+   * @param tianDi 地支名
+   */
   public static GetYearByTianDi(startYeas: number, tianDi: string) {
     console.log(startYeas)
     console.log(tianDi)

@@ -5,6 +5,7 @@ import { YearPicker } from "../../../Classes/YearPicker"
 import { FileUpService } from "../../../Service/FileUp.Service";
 import { CommonService } from "../../../Service/Common.Service";
 import { ToPostService } from "../../../Service/ToPost.Service";
+import { AppGlobal } from '../../../Classes/AppGlobal';
 
 
 @IonicPage()
@@ -34,13 +35,21 @@ export class FamilyEditPage {
   BirthdaylunlarDate
   BirthdaysolarDate
 
+  DiedsolarDate
+  DiedlunlarDate
+
+  // 过世的干支
+  diedTianDi
+  // 过世的时间间隔
+  diedDistantYears
+
   bean: any = {
     YEARS_TYPE: "阳历",
     SEX: "男",
     IS_LIVE: 1,
     LEVEL_ID: 1,
-    DIED_TIME: new Date().toISOString(),
-    BIRTHDAY_TIME: new Date().toISOString()
+    DIED_TIME: '',
+    BIRTHDAY_TIME: ''
   };
   title: string = "添加用户"
 
@@ -54,24 +63,36 @@ export class FamilyEditPage {
     public toPostService: ToPostService
 
   ) {
-    console.log(typeof (this))
-  }
 
-  SetForm(inEnt) {
+    console.log(this.params.data)
+    console.log(this.params.data != {})
+    if (Object.keys(this.params.data).length > 0) {
+      AppGlobal.CooksSet(this.i18n, JSON.stringify(this.params.data))
+    }
+    else {
+      this.params.data = JSON.parse(AppGlobal.CooksGet(this.i18n));
+    }
+    // console.log(typeof (this))
+
     this.userForm = this.formBuilder.group({
-      firstName: [(inEnt.NAME == null || inEnt.NAME.length < 1) ? "" : inEnt.NAME.substr(0, 1), [Validators.required, Validators.minLength(1), Validators.maxLength(1)]],
-      lastName: [(inEnt.NAME == null || inEnt.NAME.length < 2) ? "" : inEnt.NAME.substr(1), [Validators.required, Validators.minLength(1), Validators.maxLength(4)]],
-      SEX: [inEnt.SEX, [Validators.required, Validators.minLength(1), Validators.maxLength(1)]],
-      LEVEL_ID: [inEnt.LEVEL_ID, [Validators.required, Validators.minLength(1), Validators.maxLength(3)]],
-      BIRTHDAY_PLACE: [inEnt.BIRTHDAY_PLACE, [Validators.minLength(0), Validators.maxLength(200)]],
-      DIED_PLACE: [inEnt.DIED_PLACE, [Validators.minLength(0), Validators.maxLength(200)]],
-      REMARK: [inEnt.REMARK, [Validators.minLength(0), Validators.maxLength(200)]],
+      firstName: ['', [Validators.required, Validators.minLength(1), Validators.maxLength(1)]],
+      lastName: ['', [Validators.required, Validators.minLength(1), Validators.maxLength(4)]],
+      SEX: ['', [Validators.required, Validators.minLength(1), Validators.maxLength(1)]],
+      LEVEL_ID: ['', [Validators.required, Validators.minLength(1), Validators.maxLength(3)]],
+      BIRTHDAY_PLACE: ['', [Validators.minLength(0), Validators.maxLength(200)]],
+      DIED_PLACE: ['', [Validators.minLength(0), Validators.maxLength(200)]],
+      REMARK: ['', [Validators.minLength(0), Validators.maxLength(200)]],
     });
   }
 
-  ngOnInit() {
-    console.log(this.i18n);
-    this.SetForm(this.bean);
+  SetForm(inEnt) {
+    this.userForm.get('firstName').setValue((inEnt.NAME == null || inEnt.NAME.length < 1) ? "" : inEnt.NAME.substr(0, 1));
+    this.userForm.get('lastName').setValue((inEnt.NAME == null || inEnt.NAME.length < 2) ? "" : inEnt.NAME.substr(1))
+    this.userForm.get('SEX').setValue(inEnt.SEX)
+    this.userForm.get('LEVEL_ID').setValue(inEnt.LEVEL_ID)
+    this.userForm.get('BIRTHDAY_PLACE').setValue(inEnt.BIRTHDAY_PLACE)
+    this.userForm.get('DIED_PLACE').setValue(inEnt.DIED_PLACE)
+    this.userForm.get('REMARK').setValue(inEnt.REMARK)
   }
 
   ionViewDidLoad() {
@@ -83,6 +104,8 @@ export class FamilyEditPage {
       }
       else {
         this.bean = currMsg.Data;
+        this.bean.BIRTHDAY_TIME = this.bean.BIRTHDAY_TIME.replace(' ','T')
+        this.bean.DIED_TIME = this.bean.DIED_TIME.replace(' ','T')
         this.SetForm(this.bean);
       }
     })
@@ -135,18 +158,15 @@ export class FamilyEditPage {
     });
     alert.present();
   }
-
+  /**
+   * 选择出生时间事件
+   * @param inDate 
+   */
   DoneBirthdayTime(inDate: any) {
-    let dataStr = inDate.substr(0, inDate.indexOf('T'))
+    console.log(inDate)
+    if (inDate == null || inDate == "") return;
+    let dataStr = inDate.substr(0, 10)
     if (this.bean.YEARS_TYPE == "阳历") {
-      this.BirthdaylunlarDate = dataStr
-      this.BirthdaysolarDate = ""
-      this.toPostService.Post("Public/GetSolarDate", { Data: { "Data": dataStr } }, (currMsg) => {
-        if (currMsg.IsSuccess) {
-          this.BirthdaysolarDate = currMsg.Msg
-        }
-      });
-    } else {
       this.BirthdaysolarDate = dataStr
       this.BirthdaylunlarDate = ""
       this.toPostService.Post("Public/GetLunarDate", { Data: { "Data": dataStr } }, (currMsg) => {
@@ -154,6 +174,54 @@ export class FamilyEditPage {
           this.BirthdaylunlarDate = currMsg.Msg
         }
       });
+    } else {
+
+      this.BirthdaylunlarDate = dataStr
+      this.BirthdaysolarDate = ""
+      this.toPostService.Post("Public/GetSolarDate", { Data: { "Data": dataStr } }, (currMsg) => {
+        if (currMsg.IsSuccess) {
+          this.BirthdaysolarDate = currMsg.Msg
+        }
+      });
+    }
+
+  }
+  /** 选择去世时间事件 */
+  DoneDiedTime(inDate: any) {
+    if (inDate == null || inDate == "") return;
+    let dataStr = inDate.substr(0, 10)
+    if (this.bean.YEARS_TYPE == "阳历") {
+      this.DiedsolarDate = dataStr
+      this.DiedlunlarDate = ""
+      this.toPostService.Post("Public/GetLunarDate", { Data: { "Data": dataStr } }, (currMsg) => {
+        if (currMsg.IsSuccess) {
+          this.DiedlunlarDate = currMsg.Msg
+        }
+      });
+    } else {
+      this.DiedlunlarDate = dataStr
+      this.DiedsolarDate = ""
+      this.toPostService.Post("Public/GetSolarDate", { Data: { "Data": dataStr } }, (currMsg) => {
+        if (currMsg.IsSuccess) {
+          this.DiedsolarDate = currMsg.Msg
+        }
+      });
+    }
+
+  }
+
+  /**
+   * 
+   * @param type 1表示根据干支，0表示是根据时间间隔
+   */
+  SelectedChinaYearDied(type) {
+    if (type == 1) {
+      console.log(this.yeasStart)
+      console.log(this.diedTianDi)
+      var nowYear = YearPicker.GetYearByTianDi(this.yeasStart, this.diedTianDi);
+      console.log(nowYear)
+      // this.diedDistantYears = nowYear - this.yeasStart;
+      this.DoneDiedTime(nowYear);
     }
 
   }
