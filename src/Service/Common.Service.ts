@@ -257,7 +257,7 @@ export class CommonService {
       }
     }
 
-    return tmpArr.join(",");
+    return tmpArr;
   }
 
 

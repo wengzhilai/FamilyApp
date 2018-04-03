@@ -104,8 +104,8 @@ export class FamilyEditPage {
       }
       else {
         this.bean = currMsg.Data;
-        this.bean.BIRTHDAY_TIME = this.bean.BIRTHDAY_TIME.replace(' ','T')
-        this.bean.DIED_TIME = this.bean.DIED_TIME.replace(' ','T')
+        this.bean.BIRTHDAY_TIME = this.bean.BIRTHDAY_TIME.replace(' ', 'T')
+        this.bean.DIED_TIME = this.bean.DIED_TIME.replace(' ', 'T')
         this.SetForm(this.bean);
       }
     })
@@ -126,7 +126,19 @@ export class FamilyEditPage {
       this.bean[key] = this.userForm.value[key];
     }
     this.bean.NAME = this.bean.firstName + this.bean.lastName;
+    this.bean.BIRTHDAY_TIME=this.bean.BIRTHDAY_TIME.replace('T', ' ').replace('Z','')
+    this.bean.DIED_TIME=this.bean.DIED_TIME.replace('T', ' ').replace('Z','')
     console.log(this.bean)
+
+    this.toPostService.Post("UserInfo/save", { Data: this.bean, "SaveKeys": this.commonService.GetBeanNameStr(this.bean) }).then((currMsg) => {
+      if (!currMsg.IsSuccess) {
+        this.commonService.hint(currMsg.Msg)
+      }
+      else {
+        this.commonService.hint("保存成功")
+        this.navCtrl.pop();
+      }
+    })
 
   }
 
