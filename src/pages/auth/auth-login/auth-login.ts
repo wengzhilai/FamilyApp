@@ -75,10 +75,10 @@ export class AuthLoginPage {
     }
 
 
-    // if (Cif.debug) {
-    //   this.userForm.get('loginName').setValue("sysadmin");
-    //   this.userForm.get('password').setValue("123456");
-    // }
+    if (Cif.debug) {
+      this.userForm.get('loginName').setValue("18180770313");
+      this.userForm.get('password').setValue("123456");
+    }
     // if (this.userAndPwdList.length > 0) {
     //   console.log("设置值")
     //   this.userForm.get('loginName').setValue(this.userAndPwdList[this.userAndPwdList.length - 1].loginName);

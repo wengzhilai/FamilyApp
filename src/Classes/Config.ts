@@ -7,7 +7,7 @@ import { TranslateService } from '@ngx-translate/core';
 export class Config {
   constructor() {}
   
-  static debug:boolean = false;
+  static debug:boolean = true;
   static pageSize:number = 10;
 
   static api:string = 'http://127.0.0.1:5000/Api/';
@@ -207,12 +207,12 @@ export class Config {
     {
       text:"tabs.Index3",
       Icon:"icomoon-unit",
-      root:"UnitDefaultPage"
+      root:"HomeIndexPage"
     },
     {
       text:"tabs.Index4",
       Icon:"icomoon-pie",
-      root:"EchartsIndexPage",
+      root:"HomeIndexPage",
       children:[
         {
           text:"echarts.Report1",
@@ -243,7 +243,7 @@ export class Config {
     {
       text:"tabs.Index5",
       Icon:"person",
-      root:"SettingPage"
+      root:"HomeIndexPage"
     }
   ]
 }

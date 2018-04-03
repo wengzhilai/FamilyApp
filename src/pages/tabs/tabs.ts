@@ -1,6 +1,6 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, Renderer } from '@angular/core';
 import { Tabs } from 'ionic-angular';
-import { Platform, ModalController, NavController } from 'ionic-angular';
+import { Platform, ModalController, NavController, } from 'ionic-angular';
 import { CommonService } from "../../Service/Common.Service";
 
 import { Config } from "../../Classes/Config";
@@ -8,6 +8,7 @@ import { JPush } from 'ionic3-jpush';
 import { AppGlobal } from "../../Classes/AppGlobal";
 
 @Component({
+  selector: 'page-tabs',
   templateUrl: 'tabs.html'
 })
 export class TabsPage {
@@ -22,6 +23,7 @@ export class TabsPage {
     public jPush: JPush,
     public platform: Platform,
     public commonService: CommonService,
+    private renderer: Renderer,
 
   ) {
 
@@ -58,13 +60,13 @@ export class TabsPage {
     if (nowTodo == null) { nowTodo = obj['cn.jpush.android.EXTRA'] }
     if (nowTodo == null) {
       console.log("没找到参数：extras和cn.jpush.android.EXTRA")
-      this.commonService.hint("没找到参数：extras和cn.jpush.android.EXTRA:"+JSON.stringify(obj))
+      this.commonService.hint("没找到参数：extras和cn.jpush.android.EXTRA:" + JSON.stringify(obj))
       return Promise.resolve();
     }
     let isExist = false;
     let loginName = AppGlobal.CooksGet("loginName")
     if (nowTodo.UserNames != null && loginName != null && loginName != "") {
-      let allUserList:Array<string> = nowTodo.UserNames.split(',')
+      let allUserList: Array<string> = nowTodo.UserNames.split(',')
       for (let index = 0; index < allUserList.length; index++) {
         const element = allUserList[index];
         if (element.toLowerCase() == loginName.toLowerCase()) {
@@ -104,19 +106,19 @@ export class TabsPage {
   AutoOpenTodo() {
     if (this.platform.is('android') || this.platform.is('ios')) {
       console.log("开始自动打开")
-        try {
-          if (AppGlobal.jpushArrMsg!=null && AppGlobal.jpushArrMsg.length > 0) {
-            this.JPushNotificationHandle(AppGlobal.jpushArrMsg[0])
-            //删除已经推送成功的
-            AppGlobal.jpushArrMsg.splice(0, 1);
-            return true
-          }
-          return false
-        } catch (e) {
-          console.log("解释错误：" + JSON.stringify(e))
-          return false;
+      try {
+        if (AppGlobal.jpushArrMsg != null && AppGlobal.jpushArrMsg.length > 0) {
+          this.JPushNotificationHandle(AppGlobal.jpushArrMsg[0])
+          //删除已经推送成功的
+          AppGlobal.jpushArrMsg.splice(0, 1);
+          return true
         }
+        return false
+      } catch (e) {
+        console.log("解释错误：" + JSON.stringify(e))
+        return false;
       }
+    }
   }
 
   changeTabs(i) {
@@ -125,10 +127,45 @@ export class TabsPage {
     let indx = activeNav.index;
     this.tabs.select(indx)
 
-    // let activeVC = this.nav.getActive();
-    // let page = activeVC.instance;
-    // let tabs = page.tabs; //一定要在TabsPage页面上添加 @ViewChild('myTabs') tabs: Tabs;
-    // console.log(activeVC.name)
+    /**
+     * 所有选项卡
+     */
+    let allItem = this.tabs.getElementRef().nativeElement.childNodes[0].querySelectorAll("a")[2]
+
+    //中间的log
+    let ico = allItem.querySelectorAll("ion-icon")[0]
+    //用于判断是否已经添加了
+    let borderDiv = allItem.querySelectorAll("midlog");
+    let icoParent = allItem.querySelectorAll("overDiv-parent-icon");
+    if (icoParent.length == 0) {
+      icoParent = allItem.querySelectorAll("overDiv-parent-icon-nocheck");
+    }
+
+    if (borderDiv.length == 0) {
+      //最外层DIV，于用画圈,并设置样式
+      borderDiv = this.renderer.createElement(allItem, 'div');
+      this.renderer.setElementClass(borderDiv, 'midlog', true);
+
+      //用于盖住边线
+      this.renderer.setElementClass(this.renderer.createElement(borderDiv, 'div'), 'overDiv', true);
+
+      //第二层DIV,用于包含ICO
+      icoParent = this.renderer.createElement(borderDiv, 'div');
+
+      //添加ICO
+      icoParent.appendChild(ico)
+    }
+
+    //设置样式
+    if (indx == 2) {
+      this.renderer.setElementStyle(ico, 'color', 'white');
+      this.renderer.setElementClass(icoParent, 'overDiv-parent-icon', true);
+    }
+    else {
+      this.renderer.setElementStyle(ico, 'color', '#8c8c8c');
+      this.renderer.setElementClass(icoParent, 'overDiv-parent-icon-nocheck', true);
+    }
+
 
 
     setTimeout(() => {

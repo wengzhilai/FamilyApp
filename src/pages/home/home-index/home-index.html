@@ -10,12 +10,14 @@
 
   <ion-list class="moduleIco">
       <ion-row row-wrap>
-          <ion-col *ngFor="let item of config.AllMoudle[0].children">
+          <ion-col *ngFor="let item of config.AllMoudle[0].children;index as i">
               <button>
                   <!-- <ion-badge *ngIf="item.badge=='witeNum' && witeNum>0">{{witeNum}}</ion-badge>
                   <ion-badge *ngIf="item.badge=='ContractExtHandleNum' && pageData.ContractExtHandleNum>0">{{pageData.ContractExtHandleNum}}</ion-badge>
                   <ion-badge *ngIf="item.badge=='ContractParkHandleNum' && pageData.ContractParkHandleNum>0">{{pageData.ContractParkHandleNum}}</ion-badge> -->
-                  <ion-icon name="{{item.Icon}}" style="background-color:blue"></ion-icon>
+                  <div class="backG{{i}}">
+                    <ion-icon name="{{item.Icon}}"></ion-icon>
+                </div>
                   <div>{{item.text|translate}}</div>
               </button>
           </ion-col>
