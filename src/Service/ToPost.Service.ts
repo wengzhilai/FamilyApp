@@ -21,50 +21,50 @@ export class ToPostService {
   ) {
   }
 
-  List(apiName: string, postBean: AppDTO, callback = null) {
-    postBean.InitUser();
-    postBean.User.Token = AppGlobal.GetToken();
-    postBean.InitPageParam();
-    if (postBean.PageParam.PageSize == null || postBean.PageParam.PageSize == 0) {
-      postBean.PageParam.PageSize = Config.pageSize;
-    }
-    if (postBean.PageParam.PageIndex == null || postBean.PageParam.PageIndex == 0) {
-      postBean.PageParam.PageIndex = 1;
-    }
-    return this.Post(apiName, postBean, callback)
-  }
+  // List(apiName: string, postBean: AppDTO, callback = null) {
+  //   postBean.InitUser();
+  //   postBean.User.Token = AppGlobal.GetToken();
+  //   postBean.InitPageParam();
+  //   if (postBean.PageParam.PageSize == null || postBean.PageParam.PageSize == 0) {
+  //     postBean.PageParam.PageSize = Config.pageSize;
+  //   }
+  //   if (postBean.PageParam.PageIndex == null || postBean.PageParam.PageIndex == 0) {
+  //     postBean.PageParam.PageIndex = 1;
+  //   }
+  //   return this.Post(apiName, postBean, callback)
+  // }
 
-  SaveOrUpdate(apiName: string, bean, saveKeyStr: string = null, para: Array<KeyValuePair> = null, callback = null) {
-    if (saveKeyStr == null || saveKeyStr == '') {
-      saveKeyStr = this.commonService.GetBeanNameStr(bean);
-    }
-    if (saveKeyStr == "") {
-      this.commonService.hint("保存参数saveKeys不能为空");
-      return;
-    }
-    var postBean: AppDTO = new AppDTO();
-    postBean.InitUser();
-    postBean.User.Token = AppGlobal.GetToken();
-    postBean.Data = bean;
-    postBean.para = para;
-    postBean.PropertyCode = saveKeyStr;
-    return this.Post(apiName, postBean, callback)
-  }
+  // SaveOrUpdate(apiName: string, bean, saveKeyStr: string = null, para: Array<KeyValuePair> = null, callback = null) {
+  //   if (saveKeyStr == null || saveKeyStr == '') {
+  //     saveKeyStr = this.commonService.GetBeanNameStr(bean).join(",");
+  //   }
+  //   if (saveKeyStr == "") {
+  //     this.commonService.hint("保存参数saveKeys不能为空");
+  //     return;
+  //   }
+  //   var postBean: AppDTO = new AppDTO();
+  //   postBean.InitUser();
+  //   postBean.User.Token = AppGlobal.GetToken();
+  //   postBean.Data = bean;
+  //   postBean.para = para;
+  //   postBean.PropertyCode = saveKeyStr;
+  //   return this.Post(apiName, postBean, callback)
+  // }
 
 
-  Search(apiName, postBean: any, callback = null): Observable<any> {
-    console.log("请求[" + apiName + "]参数：");
-    console.log(postBean);
-    var headers = new Headers();
-    headers.append('Content-Type', 'application/json');
-    if (AppGlobal.GetToken() != null) {
-      headers.append('Authorization', 'Bearer ' + AppGlobal.GetToken());
-    }
-    let options = new RequestOptions({ headers: headers });
-    return this.http
-      .post(Config.api + apiName, postBean, options)
-      .map(response => response.json());
-  }
+  // Search(apiName, postBean: any, callback = null): Observable<any> {
+  //   console.log("请求[" + apiName + "]参数：");
+  //   console.log(postBean);
+  //   var headers = new Headers();
+  //   headers.append('Content-Type', 'application/json');
+  //   if (AppGlobal.GetToken() != null) {
+  //     headers.append('Authorization', 'Bearer ' + AppGlobal.GetToken());
+  //   }
+  //   let options = new RequestOptions({ headers: headers });
+  //   return this.http
+  //     .post(Config.api + apiName, postBean, options)
+  //     .map(response => response.json());
+  // }
 
   Post(apiName, postBean: any, callback = null) {
     console.group("开始请求[" + apiName + "]参数：");
@@ -133,26 +133,26 @@ export class ToPostService {
       .catch(this.handleError);
   }
 
-  /**
-   * 查询单条数据
-   * 
-   * @param {any} apiName 接口名称
-   * @param {any} id 参数
-   * @param {any} [callback=null] 
-   * @returns 
-   * @memberof ToPostService
-   */
-  Single(apiName, id, callback = null) {
-    if (id == null && id == 0) {
-      alert("查询id不能为空");
-      return;
-    }
-    var postBean: AppDTO = new AppDTO();
-    postBean.InitUser();
-    postBean.User.Token = AppGlobal.GetToken();
-    postBean.Data = id;
-    return this.Post(apiName, postBean, callback)
-  }
+  // /**
+  //  * 查询单条数据
+  //  * 
+  //  * @param {any} apiName 接口名称
+  //  * @param {any} id 参数
+  //  * @param {any} [callback=null] 
+  //  * @returns 
+  //  * @memberof ToPostService
+  //  */
+  // Single(apiName, id, callback = null) {
+  //   if (id == null && id == 0) {
+  //     alert("查询id不能为空");
+  //     return;
+  //   }
+  //   var postBean: AppDTO = new AppDTO();
+  //   postBean.InitUser();
+  //   postBean.User.Token = AppGlobal.GetToken();
+  //   postBean.Data = id;
+  //   return this.Post(apiName, postBean, callback)
+  // }
 
   handleError(error: any): Promise<any> {
     console.error('请求失败', error); // for demo purposes only
@@ -167,13 +167,13 @@ export class ToPostService {
    * 退出登录,并关闭tabls的监听
    */
 
-  LoginOut() {
-    Config.homeSubscribeNotification=false;
-    return this.Post("UserPls/LogoutedEquipment",
-      {
-        EquipmentCode: AppGlobal.CooksGet("EquipmentCode")
-      }
-    );
+  // LoginOut() {
+  //   Config.homeSubscribeNotification=false;
+  //   return this.Post("UserPls/LogoutedEquipment",
+  //     {
+  //       EquipmentCode: AppGlobal.CooksGet("EquipmentCode")
+  //     }
+  //   );
 
-  }
+  // }
 }

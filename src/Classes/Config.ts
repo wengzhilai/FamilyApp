@@ -243,7 +243,7 @@ export class Config {
     {
       text:"tabs.Index5",
       Icon:"person",
-      root:"HomeIndexPage"
+      root:"SettingPage"
     }
   ]
 }

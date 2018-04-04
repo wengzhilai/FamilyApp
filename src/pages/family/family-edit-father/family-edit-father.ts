@@ -90,7 +90,7 @@ export class FamilyEditFatherPage {
     switch (this.params.get("optype")) {
       case "EditFather":
         this.title = "添加[" + this.params.get("userName") + "]的父亲";
-        this.toPostService.Single("UserInfo/Single", {"Key":this.params.get("userId")}, (currMsg) => {
+        this.toPostService.Post("UserInfo/Single", {"Key":this.params.get("userId")}, (currMsg) => {
           if (currMsg.IsError) {
             this.commonService.hint(currMsg.Message)
             this.navCtrl.pop();
