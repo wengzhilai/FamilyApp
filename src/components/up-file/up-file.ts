@@ -41,12 +41,18 @@ export class UpFileComponent {
       console.log('选择文件类型不允许')
       console.log('该文件类型无效：[' + item.name + '] 只允许上传[' + options.allowedFileType.join(',') + ']')
     }
+
+    this.uploader.onAfterAddingFile = (item => {
+      item.withCredentials = false
+    })
     this.uploader.onCompleteAll = () => {
       console.log('上传完成')
       this.ReturnJson();
     };
     this.uploader.onSuccessItem = (item: FileItem, response: string, status: number, headers: ParsedResponseHeaders) => {
       console.log("成功一个")
+      console.log(response)
+
       let tempRes = JSON.parse(response);
       if (tempRes.IsSuccess) {
         this._reMsgList.push(tempRes.Data)
@@ -66,6 +72,7 @@ export class UpFileComponent {
     let tmpMsgList = []
     // console.log(this.uploader.queue)
     this.uploader.queue.forEach(e => {
+      console.log(e)
       if (e.isSuccess) {
         for (var index = 0; index < this._reMsgList.length; index++) {
           var msg = this._reMsgList[index];
