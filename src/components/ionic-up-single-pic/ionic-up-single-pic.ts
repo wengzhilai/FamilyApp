@@ -9,7 +9,7 @@ import { AppGlobal } from "../../Classes/AppGlobal";
 
 
 @Component({
-  selector: 'ionic-up-single-pic',
+  selector: 'up-single-pic',
   templateUrl: 'ionic-up-single-pic.html'
 })
 export class IonicUpSinglePicComponent implements OnInit {

@@ -10,9 +10,13 @@ export class Config {
   static debug:boolean = true;
   static pageSize:number = 10;
 
-  static api:string = 'http://127.0.0.1:5000/Api/';
-  static imgUrl:string = 'http://127.0.0.1:5000/';
-  
+  // static api:string = 'http://127.0.0.1:5000/Api/';
+  // static imgUrl:string = 'http://127.0.0.1:5000/';
+
+  static api:string = 'http://192.168.0.154:5000/Api/';
+  static imgUrl:string = 'http://192.168.0.154·:5000/';
+
+
   static _api:string = Config.api;
   static _imgUrl:string = Config.imgUrl;
 

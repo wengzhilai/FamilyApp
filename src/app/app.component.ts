@@ -78,9 +78,9 @@ export class MyApp {
       //this.LoadEnum();
       this.registerBackButtonAction();//注册返回按键事件
 
-      this.AutoSetup();
+      // this.AutoSetup();
       //开始加载后台消息推送进程
-      this.BackgroundFetch();
+      // this.BackgroundFetch();
 
     });
 
