@@ -50,8 +50,16 @@ export class IonicUpSinglePicComponent implements OnInit {
       this.showFile(key.ID, key.NAME)
       return
     }
-    this.fileUpService.upImg(this, key, this.CanEdit, (inFile: FileModel, url: string, fileModel: FileModel) => {
-      this.ChangeFileJson.next(inFile)
+    this.fileUpService.upImg(this, key, this.CanEdit, (outFile: FileModel, url: string, fileModel: FileModel) => {
+      console.log("控件获取到文件返回")
+      this.FileDict=fileModel
+      this.commonService.PlatformsExists("core") ? console.log(this.FileDict) : console.log(JSON.stringify(this.FileDict));
+      
+      /**
+       * 回调方法
+       */
+      this.ChangeFileJson.next(fileModel)
+
       return true;
     });
   }
